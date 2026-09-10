@@ -1,0 +1,22 @@
+cat > .gitignore << 'EOF'
+# Backend
+backend/venv/
+backend/__pycache__/
+backend/**/__pycache__/
+backend/*.egg-info/
+backend/staticfiles/
+backend/media/
+backend/.env
+backend/*.sqlite3
+
+# Frontend
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/.env.local
+
+# Common
+.vscode/
+.idea/
+.DS_Store
+EOF
