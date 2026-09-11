@@ -15,9 +15,20 @@ class MarketIntelligence:
             raise ValueError("Missing Supabase credentials in .env")
         self.supabase: Client = create_client(supabase_url, supabase_key)
 
+    def _get_latest_date(self, commodity: str = None) -> str:
+        # Get the latest available date from the database to handle pre-5PM queries gracefully
+        query = self.supabase.table('prices').select('date').order('date', desc=True).limit(1)
+        if commodity:
+            query = query.ilike('commodity', commodity)
+            
+        response = query.execute()
+        if response.data:
+            return response.data[0]['date']
+        return datetime.now().strftime("%Y-%m-%d")
+
     def get_trend(self, commodity: str, city: str, days: int = 7, date_str: str = None):
         if date_str is None:
-            date_str = datetime.now().strftime("%Y-%m-%d")
+            date_str = self._get_latest_date(commodity)
             
         try:
             end_date = datetime.strptime(date_str, "%Y-%m-%d").date()
@@ -71,7 +82,7 @@ class MarketIntelligence:
 
     def get_arbitrage(self, commodity: str, date_str: str = None, distance_km: float = None):
         if date_str is None:
-            date_str = datetime.now().strftime("%Y-%m-%d")
+            date_str = self._get_latest_date(commodity)
             
         response = self.supabase.table('prices').select('*')\
             .ilike('commodity', commodity)\
@@ -122,7 +133,7 @@ class MarketIntelligence:
 
     def get_anomaly(self, commodity: str, city: str, date_str: str = None):
         if date_str is None:
-            date_str = datetime.now().strftime("%Y-%m-%d")
+            date_str = self._get_latest_date(commodity)
             
         try:
             target_date = datetime.strptime(date_str, "%Y-%m-%d").date()
@@ -181,7 +192,7 @@ class MarketIntelligence:
 
     def get_advisory(self, commodity: str, city: str, date_str: str = None):
         if date_str is None:
-            date_str = datetime.now().strftime("%Y-%m-%d")
+            date_str = self._get_latest_date(commodity)
             
         trend_data = self.get_trend(commodity, city, days=7, date_str=date_str)
         anomaly_data = self.get_anomaly(commodity, city, date_str)
