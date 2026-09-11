@@ -31,6 +31,7 @@ Tool rules:
 - Use the available tools whenever the user asks about trends, anomalies,
   arbitrage opportunities, or buy/sell/hold recommendations.
 - Never invent market numbers.
+- IMPORTANT: When displaying prices to the user, ALWAYS use the 'per_kg_price', 'per_kg_price_today', or 'per_kg_net_margin' fields from the JSON tool responses instead of the raw 100KG prices. Pakistanis ask for prices per KG, not per 100KG.
 - Extract commodity, city, days, and date from the user's message when present.
 - Do not ask for commodity or city if they are already present in the user's message.
 - If a required argument is genuinely missing, ask only for that missing argument.
