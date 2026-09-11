@@ -77,6 +77,7 @@ class MarketIntelligence:
         return {
             "direction": direction,
             "pct_change": float(round(pct_change, 2)),
+            "per_kg_price_today": float(round(end_price / 100.0, 2)),
             "data_points": df[['date', 'fqp']].to_dict('records')
         }
 
@@ -128,6 +129,7 @@ class MarketIntelligence:
             "gross_margin": float(round(gross_margin, 2)),
             "net_margin": float(round(net_margin, 2)),
             "travel_cost": float(round(travel_cost, 2)),
+            "per_kg_net_margin": float(round(net_margin / 100.0, 2)),
             "prices_by_city": df[['city', 'fqp']].to_dict('records')
         }
 
@@ -187,7 +189,8 @@ class MarketIntelligence:
                 "min_expected": float(round(mean - (2*std), 2)) if not pd.isna(std) else actual_price,
                 "max_expected": float(round(mean + (2*std), 2)) if not pd.isna(std) else actual_price
             },
-            "actual_price": actual_price
+            "actual_price": actual_price,
+            "per_kg_price": float(round(actual_price / 100.0, 2))
         }
 
     def get_advisory(self, commodity: str, city: str, date_str: str = None):
