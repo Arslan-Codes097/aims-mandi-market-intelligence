@@ -29,3 +29,17 @@ export function useCreateChatSession() {
         },
     });
 }
+
+export function useDeleteChatSession() {
+    const qc = useQueryClient();
+    return useMutation({
+        mutationFn: async (sessionId: string) => {
+            await apiClient.delete(`/chat/sessions/${sessionId}/`);
+        },
+        onSuccess: (_, sessionId) => {
+            qc.setQueryData<ChatSession[]>(["chat-sessions"], (prev) =>
+                (prev ?? []).filter((s) => s.id !== sessionId)
+            );
+        },
+    });
+}

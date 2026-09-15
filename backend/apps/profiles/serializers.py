@@ -7,7 +7,8 @@ class UserPreferenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserPreference
         fields = [
-            "preferred_cities",
+            "home_city",
+            "occupation",
             "preferred_commodities",
             "watchlist",
             "updated_at",

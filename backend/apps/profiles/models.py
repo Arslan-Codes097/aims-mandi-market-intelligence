@@ -10,7 +10,8 @@ class UserPreference(models.Model):
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="preferences"
     )
-    preferred_cities = models.JSONField(default=list, blank=True)
+    home_city = models.CharField(max_length=100, blank=True, null=True)
+    occupation = models.CharField(max_length=100, blank=True, null=True)
     preferred_commodities = models.JSONField(default=list, blank=True)
     watchlist = models.JSONField(default=list, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)

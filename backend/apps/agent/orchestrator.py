@@ -31,7 +31,7 @@ Tool rules:
 - Use the available tools whenever the user asks about trends, anomalies,
   arbitrage opportunities, or buy/sell/hold recommendations.
 - Never invent market numbers.
-- IMPORTANT: When displaying prices to the user, ALWAYS use the 'per_kg_price', 'per_kg_price_today', or 'per_kg_net_margin' fields from the JSON tool responses instead of the raw 100KG prices. Pakistanis ask for prices per KG, not per 100KG.
+- IMPORTANT: ALWAYS use the prefix "PKR " or "Rs. " when displaying prices (e.g., PKR 165). NEVER use the Indian Rupee symbol (₹). All prices returned by tools are strictly per-KG.
 - Extract commodity, city, days, and date from the user's message when present.
 - Do not ask for commodity or city if they are already present in the user's message.
 - If a required argument is genuinely missing, ask only for that missing argument.
@@ -117,11 +117,30 @@ def _safe_content(content, user_message, fallback=None):
             "Please try asking about one commodity/city at a time."
         )
 
+    # Forcefully strip out Indian Rupee symbols that LLMs often default to
+    content = content.replace("₹ ", "PKR ").replace("₹", "PKR ")
+
     return content
 
 
-def run_agent(user_message, history=None):
-    messages = [{"role": "system", "content": SYSTEM_PROMPT}]
+def run_agent(user_message, history=None, user=None):
+    sys_prompt = SYSTEM_PROMPT
+    if user:
+        sys_prompt += f"\n\nUser Profile Context (use this to personalize your answers):"
+        if getattr(user, 'full_name', None):
+            sys_prompt += f"\n- Name: {user.full_name}"
+        try:
+            profile = user.preferences
+            if profile.occupation:
+                sys_prompt += f"\n- Occupation: {profile.occupation}"
+            if profile.home_city:
+                sys_prompt += f"\n- Home City: {profile.home_city}"
+            if profile.preferred_commodities:
+                sys_prompt += f"\n- Preferred Commodities: {', '.join(profile.preferred_commodities)}"
+        except Exception:
+            pass
+            
+    messages = [{"role": "system", "content": sys_prompt}]
     messages.extend(history or [])
     messages.append({"role": "user", "content": user_message})
 

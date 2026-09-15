@@ -30,6 +30,15 @@ class ChatSessionListCreateView(APIView):
         )
 
 
+class ChatSessionDetailView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, session_id):
+        session = get_object_or_404(ChatSession, id=session_id, user=request.user)
+        session.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 class ChatSessionMessagesView(ListAPIView):
     serializer_class = ChatMessageOutSerializer
     permission_classes = [IsAuthenticated]
@@ -62,7 +71,7 @@ class ChatView(APIView):
         ChatMessage.objects.create(
             session=session, role=ChatMessage.Role.USER, content=data["message"]
         )
-        reply = run_agent(data["message"], history=history)
+        reply = run_agent(data["message"], history=history, user=request.user)
         ChatMessage.objects.create(
             session=session, role=ChatMessage.Role.ASSISTANT, content=reply
         )

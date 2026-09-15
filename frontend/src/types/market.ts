@@ -29,7 +29,10 @@ export interface ArbitrageResponse {
     best_buy_city: string;
     best_sell_city: string;
     margin: number;
-    prices_by_city: CityPrice[];
+    net_margin: number;
+    travel_cost: number;
+    diesel_price?: number;
+    prices_by_city: { city: string; price: number }[];
 }
 
 export interface AdvisoryResponse {
@@ -39,7 +42,8 @@ export interface AdvisoryResponse {
 }
 
 export interface UserPreferences {
-    preferred_cities: string[];
+    home_city: string | null;
+    occupation: string | null;
     preferred_commodities: string[];
     watchlist: string[];
     updated_at: string;
@@ -54,6 +58,7 @@ export interface ArbitrageRoute {
     distance_km: number | null;
     fuel_cost: number | null;
     net_profit: number | null;
+    total_net_profit: number | null;
 }
 
 export interface CommoditiesResponse {

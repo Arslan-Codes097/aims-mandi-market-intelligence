@@ -13,14 +13,12 @@ def create_chat_completion(
     tools=None,
     tool_choice="auto",
     max_tokens=512,
-    reasoning_effort="none",
 ):
     params = {
-        "model": settings.GROQ_MODEL,
+        "model": "openai/gpt-oss-120b",
         "messages": messages,
         "max_tokens": max_tokens,
         "temperature": 0.2,
-        "reasoning_effort": reasoning_effort,
     }
 
     if tools:

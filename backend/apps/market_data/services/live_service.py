@@ -33,6 +33,7 @@ class LiveMarketDataService(MarketDataService):
             "margin": result["gross_margin"],
             "net_margin": result.get("net_margin"),
             "travel_cost": result.get("travel_cost"),
+            "diesel_price": result.get("diesel_price"),
             "prices_by_city": _to_price_by_city(result["prices_by_city"]),
         }
 
@@ -46,11 +47,11 @@ class LiveMarketDataService(MarketDataService):
         return {**result, "recommendation": recommendation}
 
     def get_commodities(self):
-        response = _intel.supabase.table("prices").select("commodity").execute()
+        response = _intel.supabase.table("prices").select("commodity").limit(50000).execute()
         values = {row["commodity"] for row in response.data if row.get("commodity")}
         return sorted(values)
 
     def get_cities(self):
-        response = _intel.supabase.table("prices").select("city").execute()
+        response = _intel.supabase.table("prices").select("city").limit(50000).execute()
         values = {row["city"] for row in response.data if row.get("city")}
         return sorted(values)

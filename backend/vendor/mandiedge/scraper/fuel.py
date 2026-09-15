@@ -16,11 +16,33 @@ class FuelScraper:
 
     def get_live_diesel_price(self):
         """
-        In a production environment, this would scrape OGRA or a financial news API.
-        For this prototype, we return the current standard HSD price in Pakistan.
+        Scrapes the official PSO website for live High Speed Diesel prices.
         """
-        # TODO: Implement beautifulsoup scrape of official fuel pricing site
-        return 259.0  # Current PKR per Liter of High Speed Diesel (HSD)
+        import requests
+        from bs4 import BeautifulSoup
+        
+        try:
+            url = "https://psopk.com/en/fuels/fuel-prices"
+            headers = {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+            }
+            response = requests.get(url, headers=headers, timeout=10)
+            soup = BeautifulSoup(response.content, 'html.parser')
+            
+            # Find the td containing HI-CETANE DIESEL EURO 5
+            diesel_td = soup.find('td', string=lambda text: text and 'HI-CETANE DIESEL EURO 5' in text)
+            if diesel_td:
+                price_td = diesel_td.find_next_sibling('td')
+                if price_td:
+                    # Extract the number from "Rs.403.32/Ltr"
+                    price_str = price_td.text.replace('Rs.', '').replace('/Ltr', '').strip()
+                    return float(price_str)
+                    
+        except Exception as e:
+            print(f"Error scraping live diesel price: {e}")
+            
+        # Fallback if scraping fails
+        return 403.32
 
     def run_daily_update(self, date_str=None):
         if not date_str:

@@ -1,10 +1,10 @@
 "use client";
 
-import { Plus, MessageSquare } from "lucide-react";
+import { Plus, MessageSquare, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useChatSessions } from "@/hooks/use-chat-sessions";
+import { useChatSessions, useDeleteChatSession } from "@/hooks/use-chat-sessions";
 
 export function ChatSidebar({
     activeSessionId,
@@ -14,6 +14,7 @@ export function ChatSidebar({
     onSelectSession: (id: string | null) => void;
 }) {
     const { data: sessions, isLoading } = useChatSessions();
+    const { mutate: deleteSession } = useDeleteChatSession();
 
     return (
         <div className="flex w-64 shrink-0 flex-col border-r border-border bg-card">
@@ -32,19 +33,33 @@ export function ChatSidebar({
                 {isLoading && [0, 1, 2].map((i) => <Skeleton key={i} className="h-10 w-full rounded-lg" />)}
 
                 {sessions?.map((session) => (
-                    <button
+                    <div
                         key={session.id}
-                        onClick={() => onSelectSession(session.id)}
                         className={cn(
-                            "flex w-full items-center gap-2 truncate rounded-lg px-3 py-2.5 text-left text-sm transition-colors",
+                            "group flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2.5 text-sm transition-colors cursor-pointer",
                             activeSessionId === session.id
                                 ? "bg-primary/10 text-primary"
                                 : "text-muted-foreground hover:bg-muted hover:text-foreground"
                         )}
+                        onClick={() => onSelectSession(session.id)}
                     >
-                        <MessageSquare className="h-3.5 w-3.5 shrink-0" />
-                        <span className="truncate">{session.title}</span>
-                    </button>
+                        <div className="flex items-center gap-2 truncate">
+                            <MessageSquare className="h-3.5 w-3.5 shrink-0" />
+                            <span className="truncate">{session.title}</span>
+                        </div>
+                        <button
+                            className="hidden shrink-0 text-muted-foreground hover:text-destructive group-hover:block"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                deleteSession(session.id);
+                                if (activeSessionId === session.id) {
+                                    onSelectSession(null);
+                                }
+                            }}
+                        >
+                            <Trash2 className="h-4 w-4" />
+                        </button>
+                    </div>
                 ))}
 
                 {sessions?.length === 0 && !isLoading && (

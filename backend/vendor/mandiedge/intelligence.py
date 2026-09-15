@@ -26,7 +26,7 @@ class MarketIntelligence:
             return response.data[0]['date']
         return datetime.now().strftime("%Y-%m-%d")
 
-    def get_trend(self, commodity: str, city: str, days: int = 7, date_str: str = None):
+    def get_trend(self, commodity: str, city: str, days: int = 30, date_str: str = None):
         if date_str is None:
             date_str = self._get_latest_date(commodity)
             
@@ -45,20 +45,18 @@ class MarketIntelligence:
             .order('date').execute()
             
         data = response.data
-        if not data or len(data) < 2:
-            # Fix type inconsistency for early return
-            if data:
-                for d in data:
-                    if 'fqp' in d and d['fqp'] is not None and str(d['fqp']).strip() != '-':
-                        try:
-                            d['fqp'] = float(d['fqp'])
-                        except ValueError:
-                            pass
-            return {"direction": "stable", "pct_change": 0.0, "data_points": data}
+        if not data:
+            return {"direction": "stable", "pct_change": 0.0, "data_points": []}
             
         df = pd.DataFrame(data)
         df['fqp'] = pd.to_numeric(df['fqp'], errors='coerce')
         df = df.dropna(subset=['fqp'])
+        
+        # Normalize to per-kg
+        df['fqp'] = df['fqp'] / 100.0
+        
+        # Deduplicate dates (take latest entry for a day if multiple exist)
+        df = df.drop_duplicates(subset=['date'], keep='last')
         
         if len(df) < 2:
              return {"direction": "stable", "pct_change": 0.0, "data_points": df.to_dict('records')}
@@ -77,7 +75,7 @@ class MarketIntelligence:
         return {
             "direction": direction,
             "pct_change": float(round(pct_change, 2)),
-            "per_kg_price_today": float(round(end_price / 100.0, 2)),
+            "per_kg_price_today": float(round(end_price, 2)),
             "data_points": df[['date', 'fqp']].to_dict('records')
         }
 
@@ -97,6 +95,9 @@ class MarketIntelligence:
         df['fqp'] = pd.to_numeric(df['fqp'], errors='coerce')
         df = df.dropna(subset=['fqp'])
         
+        # Normalize to per-kg
+        df['fqp'] = df['fqp'] / 100.0
+        
         # Add deduplication to fix duplicate row risk
         df = df.drop_duplicates(subset=['city'], keep='last')
         
@@ -110,15 +111,15 @@ class MarketIntelligence:
         net_margin = gross_margin
         travel_cost = 0.0
         
+        fuel_response = self.supabase.table('fuel_prices').select('diesel_price')\
+            .eq('date', date_str).execute()
+        
+        diesel_price = 259.0 # Fallback
+        if fuel_response.data and len(fuel_response.data) > 0:
+            diesel_price = float(fuel_response.data[0]['diesel_price'])
+        
         # If distance is provided, calculate true net profit using live Diesel price
         if distance_km and distance_km > 0:
-            fuel_response = self.supabase.table('fuel_prices').select('diesel_price')\
-                .eq('date', date_str).execute()
-            
-            diesel_price = 259.0 # Fallback
-            if fuel_response.data and len(fuel_response.data) > 0:
-                diesel_price = float(fuel_response.data[0]['diesel_price'])
-                
             # Assume 5 KM per Liter for commercial truck
             travel_cost = (diesel_price / 5.0) * distance_km
             net_margin = gross_margin - travel_cost
@@ -129,7 +130,8 @@ class MarketIntelligence:
             "gross_margin": float(round(gross_margin, 2)),
             "net_margin": float(round(net_margin, 2)),
             "travel_cost": float(round(travel_cost, 2)),
-            "per_kg_net_margin": float(round(net_margin / 100.0, 2)),
+            "per_kg_net_margin": float(round(net_margin, 2)),
+            "diesel_price": float(round(diesel_price, 2)) if 'diesel_price' in locals() else 403.32,
             "prices_by_city": df[['city', 'fqp']].to_dict('records')
         }
 
@@ -158,6 +160,9 @@ class MarketIntelligence:
         df = pd.DataFrame(data)
         df['fqp'] = pd.to_numeric(df['fqp'], errors='coerce')
         df = df.dropna(subset=['fqp'])
+        
+        # Normalize to per-kg
+        df['fqp'] = df['fqp'] / 100.0
         
         if df.empty:
             return {"is_anomaly": False, "z_score": 0.0, "expected_range": {"min_expected": 0.0, "max_expected": 0.0}, "actual_price": 0.0}
@@ -189,8 +194,8 @@ class MarketIntelligence:
                 "min_expected": float(round(mean - (2*std), 2)) if not pd.isna(std) else actual_price,
                 "max_expected": float(round(mean + (2*std), 2)) if not pd.isna(std) else actual_price
             },
-            "actual_price": actual_price,
-            "per_kg_price": float(round(actual_price / 100.0, 2))
+            "actual_price": float(round(actual_price, 2)),
+            "per_kg_price": float(round(actual_price, 2))
         }
 
     def get_advisory(self, commodity: str, city: str, date_str: str = None):

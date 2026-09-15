@@ -5,15 +5,42 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from .models import User
 
 
+from apps.profiles.models import UserPreference
+
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, min_length=8)
+    confirm_password = serializers.CharField(write_only=True, min_length=8)
+    home_city = serializers.CharField(required=False, allow_blank=True, allow_null=True)
+    occupation = serializers.CharField(required=False, allow_blank=True, allow_null=True)
+    preferred_commodities = serializers.ListField(child=serializers.CharField(), required=False)
+    watchlist = serializers.ListField(child=serializers.CharField(), required=False)
 
     class Meta:
         model = User
-        fields = ["email", "password", "full_name"]
+        fields = ["email", "password", "confirm_password", "full_name", "home_city", "occupation", "preferred_commodities", "watchlist"]
+
+    def validate(self, attrs):
+        if attrs.get("password") != attrs.get("confirm_password"):
+            raise serializers.ValidationError({"confirm_password": "Passwords do not match."})
+        return attrs
 
     def create(self, validated_data):
-        return User.objects.create_user(**validated_data)
+        home_city = validated_data.pop("home_city", None)
+        occupation = validated_data.pop("occupation", None)
+        preferred_commodities = validated_data.pop("preferred_commodities", [])
+        watchlist = validated_data.pop("watchlist", [])
+        validated_data.pop("confirm_password", None)
+        
+        user = User.objects.create_user(**validated_data)
+        
+        UserPreference.objects.create(
+            user=user,
+            home_city=home_city,
+            occupation=occupation,
+            preferred_commodities=preferred_commodities,
+            watchlist=watchlist
+        )
+        return user
 
 
 class VerifyOTPSerializer(serializers.Serializer):
