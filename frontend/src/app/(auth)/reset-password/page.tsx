@@ -14,7 +14,7 @@ const schema = z.object({
 });
 type FormValues = z.infer<typeof schema>;
 
-export default function ResetPasswordPage() {
+function ResetPasswordForm() {
     const params = useSearchParams();
     const email = params.get("email") ?? "";
     const { register, handleSubmit, formState: { errors } } = useForm<FormValues>({
@@ -49,5 +49,15 @@ export default function ResetPasswordPage() {
                 </Button>
             </form>
         </div>
+    );
+}
+
+import { Suspense } from "react";
+
+export default function ResetPasswordPage() {
+    return (
+        <Suspense fallback={<div className="p-4 text-sm text-muted-foreground">Loading...</div>}>
+            <ResetPasswordForm />
+        </Suspense>
     );
 }
