@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useVerifyEmail, useResendOtp } from "@/hooks/use-auth";
 
-export default function VerifyEmailPage() {
+function VerifyEmailForm() {
     const params = useSearchParams();
     const email = params.get("email") ?? "";
     const [digits, setDigits] = useState<string[]>(Array(6).fill(""));
@@ -69,5 +69,15 @@ export default function VerifyEmailPage() {
                 Resend code
             </button>
         </div>
+    );
+}
+
+import { Suspense } from "react";
+
+export default function VerifyEmailPage() {
+    return (
+        <Suspense fallback={<div className="p-4 text-sm text-muted-foreground">Loading...</div>}>
+            <VerifyEmailForm />
+        </Suspense>
     );
 }
