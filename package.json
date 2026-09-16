@@ -1,0 +1,16 @@
+{
+  "name": "amis-mandi-market-intelligence",
+  "version": "1.0.0",
+  "description": "AMIS Mandi Market Intelligence Monorepo",
+  "scripts": {
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && python manage.py runserver 0.0.0.0:8000",
+    "dev:all": "concurrently -n \"NEXT,FASTAPI\" -c \"cyan,magenta\" \"npm run dev:frontend\" \"npm run dev:backend\"",
+    "install:frontend": "cd frontend && npm install",
+    "install:backend": "cd backend && pip install -r requirements.txt",
+    "install:all": "npm run install:frontend && npm run install:backend"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.5"
+  }
+}
