@@ -19,9 +19,9 @@
 
 ## 📸 Screenshots
 
-| Dashboard Overview | AI Tool-Calling Agent |
+| Settings Configuration | AI Tool-Calling Agent |
 | :---: | :---: |
-| <img src="docs/assets/dashboard.png" width="400" alt="Dashboard Overview"/> | <img src="docs/assets/ai_agent.png" width="400" alt="AI Agent"/> |
+| <img src="docs/assets/settings.png" width="400" alt="Settings Configuration"/> | <img src="docs/assets/ai_agent.png" width="400" alt="AI Agent"/> |
 | **Commodity Analysis** | **Live Arbitrage Margins** |
 | <img src="docs/assets/commodity_analysis.png" width="400" alt="Commodity Analysis"/> | <img src="docs/assets/arbitrage.png" width="400" alt="Live Arbitrage"/> |
 
