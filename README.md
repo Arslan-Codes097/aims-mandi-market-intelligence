@@ -4,20 +4,21 @@
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688?style=for-the-badge&logo=fastapi&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Supabase-336791?style=for-the-badge&logo=postgresql&logoColor=white)
 ![Groq](https://img.shields.io/badge/AI_Agent-Groq_Llama-f55036?style=for-the-badge)
-![License](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)
+![Copyright](https://img.shields.io/badge/License-Proprietary-red.svg?style=for-the-badge)
 
 **AMIS Mandi Market Intelligence** unlocks 20 years of Punjab's Agriculture Marketing Information Service (AMIS) data. It transforms a legacy government database into an intelligent, AI-powered platform featuring historical charting, live logistics-aware arbitrage detection, and a natural language tool-calling agent designed for farmers, traders, and researchers.
 
 ---
 
-## 🌐 Live Demo & Media
+## 🌐 Live Product Environments
 
-- **Live App:** [View Dashboard on Vercel](https://aims-mandi-market-intelligence-git-main-arslan-s-projects14.vercel.app)
+- **Web Application:** [https://aims-orcin.vercel.app/](https://aims-orcin.vercel.app/)
+- **Backend API Server:** [https://aims-wpuy.onrender.com/api/](https://aims-wpuy.onrender.com/api/)
 - **Demo Video:** *Placeholder for demo video (docs/assets/demo.mp4)*
 
 ---
 
-## 📸 Screenshots
+## 📸 Platform Interface
 
 | Settings Configuration | AI Tool-Calling Agent |
 | :---: | :---: |
@@ -25,11 +26,9 @@
 | **Commodity Analysis** | **Live Arbitrage Margins** |
 | <img src="docs/assets/commodity_analysis.png" width="400" alt="Commodity Analysis"/> | <img src="docs/assets/arbitrage.png" width="400" alt="Live Arbitrage"/> |
 
-*(Note: Add actual screenshots to the `docs/assets/` folder)*
-
 ---
 
-## ✨ Key Features
+## ✨ Core Product Features
 
 - **📊 Historical Data Pipeline:** Automated daily scraping of AMIS and fuel prices, normalizing unstructured legacy data into clean time-series metrics.
 - **🧠 AI Tool-Calling Agent:** Chat interface powered by Groq that translates natural human language (e.g., *"tamatar rate Sahiwal aaj"*) into structured database queries.
@@ -39,7 +38,7 @@
 
 ---
 
-## 🛠️ Tech Stack Table
+## 🛠️ Enterprise Tech Stack
 
 | Category | Technology | Purpose |
 | :--- | :--- | :--- |
@@ -52,7 +51,7 @@
 
 ---
 
-## ⚙️ How It Works
+## ⚙️ System Workflow
 
 1. **Data Ingestion:** A scheduled Cron job scrapes daily min/max/FQP prices from the AMIS ASP.NET portal and live diesel prices, writing them to a Supabase PostgreSQL database.
 2. **Data Processing:** Pandas and SciPy scripts calculate moving averages, historical anomalies, and true arbitrage margins based on geographical distances and fuel costs.
@@ -62,7 +61,7 @@
 
 ---
 
-## 🏗️ Project Architecture
+## 🏗️ Cloud Architecture
 
 ```mermaid
 graph TD
@@ -77,61 +76,15 @@ graph TD
 
 ---
 
-## 📂 Project Structure
+## © Copyright & License
 
-```text
-aims-mandi-market-intelligence/
-├── frontend/                 # Next.js web dashboard
-│   ├── src/app/              # App router (auth, dashboard)
-│   ├── src/components/       # UI components & charts
-│   └── package.json
-├── backend/                  # Python backend server
-│   ├── config/               # Settings and configuration
-│   ├── apps/                 # Core logic, agent & scrapers
-│   └── requirements.txt
-└── README.md
-```
+**Proprietary Software**  
+© 2026 AMIS Mandi Market Intelligence. All Rights Reserved.  
+*This software is the confidential and proprietary product of its creators. No part of this repository may be reproduced, distributed, or transmitted in any form or by any means, including copying, compiling, or reverse engineering, without the prior written permission of the authors.*
 
 ---
 
-## 💻 Local Setup & Installation
-
-### Prerequisites
-- Node.js 18+
-- Python 3.10+
-- PostgreSQL (or a Supabase account)
-
-### 1. Clone the Repository
-```bash
-git clone https://github.com/s-zaid-13/aims-mandi-market-intelligence.git
-cd aims-mandi-market-intelligence
-```
-
-### 2. Backend Setup
-```bash
-cd backend
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-pip install -r requirements.txt
-```
-*Create a `.env` file in the `backend` directory with your Groq and Supabase credentials, then run:*
-```bash
-python manage.py runserver 0.0.0.0:8000
-```
-
-### 3. Frontend Setup (Next.js)
-```bash
-cd ../frontend
-npm install
-```
-*Create a `.env.local` file in the `frontend` directory with your `NEXT_PUBLIC_API_URL`, then run:*
-```bash
-npm run dev
-```
-
----
-
-## 👤 Author & Credits
+## 👤 Founders & Credits
 
 - **Arsalan Babar** - [@Arslan-Codes097](https://github.com/Arslan-Codes097)
-- **Zaid** - [@s-zaid-13](https://github.com/s-zaid-13) (Partner & Original Repo Owner)
+- **Zaid** - [@s-zaid-13](https://github.com/s-zaid-13) (Partner & Repo Owner)
