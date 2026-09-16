@@ -56,6 +56,7 @@ AUTH_USER_MODEL = "accounts.User"
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -105,6 +106,7 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
@@ -117,6 +119,9 @@ REST_FRAMEWORK = {
 
 CORS_ALLOWED_ORIGINS = env.list(
     "CORS_ALLOWED_ORIGINS", default=["http://localhost:3000"]
+)
+CSRF_TRUSTED_ORIGINS = env.list(
+    "CSRF_TRUSTED_ORIGINS", default=["http://localhost:3000"]
 )
 
 GROQ_API_KEY = env("GROQ_API_KEY")
@@ -194,5 +199,5 @@ GOOGLE_OAUTH_CLIENT_ID = env("GOOGLE_OAUTH_CLIENT_ID")
 OTP_EXPIRY_MINUTES = 10
 OTP_RESEND_COOLDOWN_SECONDS = 60
 FRONTEND_RESET_PASSWORD_URL = env(
-    "FRONTEND_RESET_PASSWORD_URL", default="http://localhost:3001/reset-password"
+    "FRONTEND_RESET_PASSWORD_URL", default="http://localhost:3000/reset-password"
 )
