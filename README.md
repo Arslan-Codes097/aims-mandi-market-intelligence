@@ -87,4 +87,4 @@ graph TD
 ## 👤 Founders & Credits
 
 - **Arsalan Babar** - [@Arslan-Codes097](https://github.com/Arslan-Codes097)
-- **Zaid** - [@s-zaid-13](https://github.com/s-zaid-13) (Partner & Repo Owner)
+- **Samama Zaid** - [@s-zaid-13](https://github.com/s-zaid-13)
