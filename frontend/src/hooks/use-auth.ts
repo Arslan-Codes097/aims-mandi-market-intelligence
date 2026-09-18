@@ -43,7 +43,7 @@ export function useVerifyEmail() {
             tokenStorage.set(res.data);
             setUser({ id: "", email: "", full_name: "", is_verified: true, auth_provider: "email" });
             toast.success("Email verified.");
-            router.push(ROUTES.chat);
+            router.push(ROUTES.onboarding);
         },
         onError: () => toast.error("Invalid or expired code."),
     });
@@ -92,9 +92,16 @@ export function useGoogleLogin() {
         onSuccess: (res) => {
             tokenStorage.set(res.data);
             setUser({ id: "", email: "", full_name: "", is_verified: true, auth_provider: "google" });
-            router.push(ROUTES.chat);
+            if (res.data.is_new_user) {
+                router.push(ROUTES.onboarding);
+            } else {
+                router.push(ROUTES.chat);
+            }
         },
-        onError: () => toast.error("Google sign-in failed."),
+        onError: (err: any) => {
+            const detail = err?.response?.data?.detail || "Google sign-in failed.";
+            toast.error(detail);
+        },
     });
 }
 

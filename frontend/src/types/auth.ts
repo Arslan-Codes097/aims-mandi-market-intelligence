@@ -9,6 +9,7 @@ export interface User {
 export interface AuthTokens {
     access: string;
     refresh: string;
+    is_new_user?: boolean;
 }
 
 export interface RegisterPayload {
@@ -33,6 +34,7 @@ export interface LoginPayload {
 
 export interface GoogleAuthPayload {
     id_token: string;
+    mode?: "login" | "signup";
 }
 
 export interface ForgotPasswordPayload {

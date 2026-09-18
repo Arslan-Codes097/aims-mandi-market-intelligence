@@ -13,4 +13,5 @@ export const ROUTES = {
     arbitrage: "/arbitrage",
     commodity: (slug: string) => `/commodity/${slug}`,
     settings: "/settings",
+    onboarding: "/onboarding",
 } as const;

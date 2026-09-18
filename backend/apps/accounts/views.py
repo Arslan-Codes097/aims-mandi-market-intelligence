@@ -101,13 +101,18 @@ class GoogleLoginView(APIView):
         serializer.is_valid(raise_exception=True)
 
         try:
-            user = authenticate_google_user(serializer.validated_data["id_token"])
-        except InvalidGoogleTokenError:
+            user, is_new_user = authenticate_google_user(
+                serializer.validated_data["id_token"],
+                mode=serializer.validated_data.get("mode", "login")
+            )
+        except InvalidGoogleTokenError as e:
             return Response(
-                {"detail": "Invalid Google token."}, status=status.HTTP_400_BAD_REQUEST
+                {"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST
             )
 
-        return Response(issue_tokens_for(user))
+        response_data = issue_tokens_for(user)
+        response_data["is_new_user"] = is_new_user
+        return Response(response_data)
 
 
 class LogoutView(APIView):

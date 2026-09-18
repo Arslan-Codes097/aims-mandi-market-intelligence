@@ -9,7 +9,7 @@ class InvalidGoogleTokenError(Exception):
     pass
 
 
-def authenticate_google_user(id_token_str):
+def authenticate_google_user(id_token_str, mode='login'):
     try:
         payload = id_token.verify_oauth2_token(
             id_token_str, google_requests.Request(), settings.GOOGLE_OAUTH_CLIENT_ID
@@ -20,18 +20,29 @@ def authenticate_google_user(id_token_str):
     email = payload["email"]
     full_name = payload.get("name", "")
 
-    user, created = User.objects.get_or_create(
-        email=email,
-        defaults={
-            "full_name": full_name,
-            "auth_provider": "google",
-            "is_verified": True,
-        },
-    )
+    if mode == 'login':
+        try:
+            user = User.objects.get(email=email)
+            if user.auth_provider != "google":
+                user.auth_provider = "google"
+                user.is_verified = True
+                user.save(update_fields=["auth_provider", "is_verified"])
+            return user, False
+        except User.DoesNotExist:
+            raise InvalidGoogleTokenError("Account does not exist. Please sign up.")
+    else:
+        user, created = User.objects.get_or_create(
+            email=email,
+            defaults={
+                "full_name": full_name,
+                "auth_provider": "google",
+                "is_verified": True,
+            },
+        )
 
-    if not created and user.auth_provider != "google":
-        user.auth_provider = "google"
-        user.is_verified = True
-        user.save(update_fields=["auth_provider", "is_verified"])
+        if not created and user.auth_provider != "google":
+            user.auth_provider = "google"
+            user.is_verified = True
+            user.save(update_fields=["auth_provider", "is_verified"])
 
-    return user
+        return user, created

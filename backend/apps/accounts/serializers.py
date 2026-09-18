@@ -71,6 +71,7 @@ class LoginSerializer(serializers.Serializer):
 
 class GoogleAuthSerializer(serializers.Serializer):
     id_token = serializers.CharField()
+    mode = serializers.ChoiceField(choices=['login', 'signup'], required=False, default='login')
 
 
 class ForgotPasswordSerializer(serializers.Serializer):
