@@ -1,6 +1,6 @@
 "use client";
 
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { apiClient } from "@/lib/api-client";
@@ -18,6 +18,7 @@ import type {
     ResendOtpPayload,
     ResetPasswordPayload,
     VerifyEmailPayload,
+    User,
 } from "@/types/auth";
 
 export function useRegister() {
@@ -132,6 +133,22 @@ export function useChangePassword() {
             apiClient.post<MessageResponse>("/auth/change-password/", payload),
         onSuccess: () => toast.success("Password changed successfully."),
         onError: () => toast.error("Old password is incorrect."),
+    });
+}
+
+export function useMe() {
+    const setUser = useAuthStore((s) => s.setUser);
+    const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+
+    return useQuery({
+        queryKey: ["me"],
+        queryFn: async () => {
+            const { data } = await apiClient.get<User>("/auth/me/");
+            setUser(data);
+            return data;
+        },
+        enabled: isAuthenticated,
+        retry: false,
     });
 }
 

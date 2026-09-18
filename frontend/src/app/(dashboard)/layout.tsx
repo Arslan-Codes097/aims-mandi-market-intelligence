@@ -5,8 +5,10 @@ import { usePathname, useRouter } from "next/navigation";
 import { Sidebar } from "@/components/layout/sidebar";
 import { MobileNav } from "@/components/layout/mobile-nav";
 import { useAuthStore } from "@/store/auth-store";
+import { useMe } from "@/hooks/use-auth";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+    useMe();
     const { isAuthenticated, isHydrated, hydrate } = useAuthStore();
     const router = useRouter();
     const pathname = usePathname();

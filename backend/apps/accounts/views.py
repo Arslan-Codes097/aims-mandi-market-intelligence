@@ -115,6 +115,19 @@ class GoogleLoginView(APIView):
         return Response(response_data)
 
 
+class MeView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        return Response({
+            "id": str(request.user.id),
+            "email": request.user.email,
+            "full_name": request.user.full_name,
+            "is_verified": request.user.is_verified,
+            "auth_provider": request.user.auth_provider,
+        })
+
+
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
 
