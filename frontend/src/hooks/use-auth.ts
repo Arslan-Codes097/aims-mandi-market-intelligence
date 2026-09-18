@@ -133,3 +133,21 @@ export function useLogout() {
         },
     });
 }
+export function useDeleteAccount() {
+    const router = useRouter();
+    const logout = useAuthStore((s) => s.logout);
+    return useMutation({
+        mutationFn: (payload: import('@/types/auth').DeleteAccountPayload) =>
+            apiClient.delete('/auth/delete-account/', { data: payload }),
+        onSuccess: () => {
+            logout();
+            tokenStorage.clear();
+            toast.success('Account deleted. We are sorry to see you go!');
+            router.push(ROUTES.login);
+        },
+        onError: (err: any) => {
+            const detail = err?.response?.data?.password?.[0] || err?.response?.data?.confirmation_text?.[0] || 'Failed to delete account.';
+            toast.error(detail);
+        },
+    });
+}

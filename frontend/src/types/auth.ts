@@ -53,3 +53,7 @@ export interface ChangePasswordPayload {
 export interface MessageResponse {
     message: string;
 }
+export interface DeleteAccountPayload {
+    password?: string;
+    confirmation_text?: string;
+}

@@ -97,3 +97,20 @@ class ChangePasswordSerializer(serializers.Serializer):
 def issue_tokens_for(user):
     refresh = RefreshToken.for_user(user)
     return {"access": str(refresh.access_token), "refresh": str(refresh)}
+
+
+class DeleteAccountSerializer(serializers.Serializer):
+    password = serializers.CharField(required=False, allow_blank=True)
+    confirmation_text = serializers.CharField(required=False, allow_blank=True)
+
+    def validate(self, attrs):
+        user = self.context['request'].user
+        if user.auth_provider == 'email':
+            if not attrs.get('password'):
+                raise serializers.ValidationError({'password': 'Password is required to delete your account.'})
+            if not user.check_password(attrs['password']):
+                raise serializers.ValidationError({'password': 'Incorrect password.'})
+        elif user.auth_provider == 'google':
+            if attrs.get('confirmation_text') != 'DELETE':
+                raise serializers.ValidationError({'confirmation_text': 'You must type DELETE to confirm.'})
+        return attrs

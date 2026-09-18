@@ -9,6 +9,7 @@ from .services.email_service import send_otp_email
 from .models import OTPCode, User
 from .serializers import (
     ChangePasswordSerializer,
+    DeleteAccountSerializer,
     ForgotPasswordSerializer,
     GoogleAuthSerializer,
     LoginSerializer,
@@ -170,3 +171,20 @@ class ChangePasswordView(APIView):
         request.user.set_password(serializer.validated_data["new_password"])
         request.user.save(update_fields=["password"])
         return Response({"message": "Password changed successfully."})
+
+
+class DeleteAccountView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request):
+        serializer = DeleteAccountSerializer(
+            data=request.data, context={'request': request}
+        )
+        serializer.is_valid(raise_exception=True)
+        
+        user = request.user
+        # Optional: Clean up any external resources like Supabase Auth here if necessary, 
+        # but since this is purely a local DB managed user, deleting the model triggers cascade.
+        user.delete()
+        
+        return Response(status=status.HTTP_204_NO_CONTENT)

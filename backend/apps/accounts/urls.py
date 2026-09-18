@@ -24,4 +24,9 @@ urlpatterns = [
         views.ChangePasswordView.as_view(),
         name="change-password",
     ),
+    path(
+        "auth/delete-account/", 
+        views.DeleteAccountView.as_view(), 
+        name="delete-account"
+    ),
 ]
