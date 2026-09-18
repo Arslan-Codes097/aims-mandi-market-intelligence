@@ -1,7 +1,7 @@
 # 🎬 AMIS Mandi Market Intelligence
 
 ![Next.js](https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688?style=for-the-badge&logo=fastapi&logoColor=white)
+![Django](https://img.shields.io/badge/Django-REST_Framework-092E20?style=for-the-badge&logo=django&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Supabase-336791?style=for-the-badge&logo=postgresql&logoColor=white)
 ![Groq](https://img.shields.io/badge/AI_Agent-Groq_Llama-f55036?style=for-the-badge)
 ![Copyright](https://img.shields.io/badge/License-Proprietary-red.svg?style=for-the-badge)
@@ -34,7 +34,7 @@
 - **🧠 AI Tool-Calling Agent:** Chat interface powered by Groq that translates natural human language (e.g., *"tamatar rate Sahiwal aaj"*) into structured database queries.
 - **📈 Trend & Anomaly Detection:** Compute real insights including rising/falling directions, volatility scores, and unexpected price shocks.
 - **🚛 Logistics-Aware Arbitrage:** Cross-city price gap detection with true Net Margins calculated using real-world diesel travel costs.
-- **🔐 Persistent User Memory:** Saves preferred cities and commodities per user via Supabase Auth for contextual query understanding.
+- **🧠 Persistent User Memory:** Saves preferred cities and commodities securely via Custom Django JWT Auth for deeply contextual AI query understanding.
 
 ---
 
@@ -42,9 +42,9 @@
 
 | Category | Technology | Purpose |
 | :--- | :--- | :--- |
-| **Frontend** | Next.js, Tailwind, Recharts | Interactive web dashboard and data visualization |
-| **Backend API** | FastAPI / Django (Python) | Async endpoints, backend architecture |
-| **Database** | PostgreSQL (Supabase) | Time-series storage, Auth, and Row Level Security |
+| **Frontend** | Next.js, Tailwind, Zustand | Interactive web dashboard, state management, and PWA |
+| **Backend API** | Django REST Framework | Secure REST endpoints, JWT authentication, and AI orchestration |
+| **Database** | PostgreSQL (Supabase) | Time-series storage and relational models |
 | **AI / LLM** | Groq (Llama / GPT-OSS) | Fast structured JSON output for NL tool-calling |
 | **Data Engine** | Pandas, Numpy, Scipy | Trend, statistical analysis, and ML logic |
 | **Scraper** | BeautifulSoup, Requests | Handling legacy ASP.NET postback forms |
@@ -53,7 +53,7 @@
 
 ## ⚙️ System Workflow
 
-1. **Data Ingestion:** A scheduled Cron job scrapes daily min/max/FQP prices from the AMIS ASP.NET portal and live diesel prices, writing them to a Supabase PostgreSQL database.
+1. **Data Ingestion:** Automated GitHub Actions run daily scrapers to extract min/max/FQP prices from the AMIS ASP.NET portal and fetch live diesel prices, writing them to PostgreSQL.
 2. **Data Processing:** Pandas and SciPy scripts calculate moving averages, historical anomalies, and true arbitrage margins based on geographical distances and fuel costs.
 3. **User Query:** A user types a natural language question into the Next.js dashboard.
 4. **Agentic Routing:** The Groq-powered AI agent parses the intent, selects the appropriate backend tool (e.g., `get_trend`, `get_arbitrage`), and executes the structured query.
@@ -65,11 +65,11 @@
 
 ```mermaid
 graph TD
-    A[User / Farmer] -->|Natural Language Query| B(Next.js Frontend)
-    B -->|REST API| C(Python Backend)
+    A[User / Farmer] -->|Natural Language Query| B(Next.js PWA Frontend)
+    B -->|REST API / JWT Auth| C(Django Backend)
     C <-->|NL Parsing & Tool Selection| D[Groq AI Agent]
     C <-->|SQL Queries| E[(Supabase PostgreSQL)]
-    F[Python Scraper] -->|Daily Cron Job| E
+    F[GitHub Actions] -->|Daily Scraper Workflow| E
     F -->|Scrapes ASP.NET Form| G[Punjab AMIS Portal]
     F -->|Scrapes Logistics| H[Live Fuel Prices]
 ```
