@@ -18,8 +18,15 @@ const OCCUPATION_OPTIONS = [
     { value: "Other", label: "Other" },
 ];
 
+interface FormValues {
+    home_city: string;
+    occupation: string;
+    preferred_commodities: string[];
+    watchlist: string[];
+}
+
 export default function OnboardingPage() {
-    const { handleSubmit, control, formState: { isSubmitting } } = useForm({
+    const { handleSubmit, control, formState: { isSubmitting } } = useForm<FormValues>({
         defaultValues: {
             home_city: "",
             occupation: "",
