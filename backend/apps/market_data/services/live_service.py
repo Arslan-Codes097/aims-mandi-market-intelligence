@@ -1,3 +1,4 @@
+from functools import lru_cache
 from intelligence import MarketIntelligence
 
 from .base import MarketDataService
@@ -46,11 +47,13 @@ class LiveMarketDataService(MarketDataService):
         )
         return {**result, "recommendation": recommendation}
 
+    @lru_cache(maxsize=1)
     def get_commodities(self):
         response = _intel.supabase.table("prices").select("commodity").limit(50000).execute()
         values = {row["commodity"] for row in response.data if row.get("commodity")}
         return sorted(values)
 
+    @lru_cache(maxsize=1)
     def get_cities(self):
         response = _intel.supabase.table("prices").select("city").limit(50000).execute()
         values = {row["city"] for row in response.data if row.get("city")}

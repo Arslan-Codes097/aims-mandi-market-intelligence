@@ -69,8 +69,15 @@ export function useLogin() {
             setUser({ id: "", email: "", full_name: "", is_verified: true, auth_provider: "email" });
             router.push(ROUTES.chat);
         },
-        onError: (err: any) => {
+        onError: (err: any, variables: any) => {
             const detail = err?.response?.data?.non_field_errors?.[0];
+            if (detail === "Please verify your email before logging in.") {
+                toast.error("Unverified email. Redirecting to verification...");
+                const params = new URLSearchParams();
+                params.set("email", variables.email);
+                router.push(`${ROUTES.verifyEmail}?${params.toString()}`);
+                return;
+            }
             toast.error(detail ?? "Invalid email or password.");
         },
     });
