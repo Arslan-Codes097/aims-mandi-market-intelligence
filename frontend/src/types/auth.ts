@@ -10,6 +10,7 @@ export interface AuthTokens {
     access: string;
     refresh: string;
     is_new_user?: boolean;
+    user: User;
 }
 
 export interface RegisterPayload {

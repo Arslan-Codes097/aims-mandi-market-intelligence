@@ -41,7 +41,7 @@ export function useVerifyEmail() {
             apiClient.post<AuthTokens>("/auth/verify-email/", payload),
         onSuccess: (res) => {
             tokenStorage.set(res.data);
-            setUser({ id: "", email: "", full_name: "", is_verified: true, auth_provider: "email" });
+            setUser(res.data.user);
             toast.success("Email verified.");
             router.push(ROUTES.onboarding);
         },
@@ -66,7 +66,7 @@ export function useLogin() {
             apiClient.post<AuthTokens>("/auth/login/", payload),
         onSuccess: (res) => {
             tokenStorage.set(res.data);
-            setUser({ id: "", email: "", full_name: "", is_verified: true, auth_provider: "email" });
+            setUser(res.data.user);
             router.push(ROUTES.chat);
         },
         onError: (err: any, variables: any) => {
@@ -91,7 +91,7 @@ export function useGoogleLogin() {
             apiClient.post<AuthTokens>("/auth/google/", payload),
         onSuccess: (res) => {
             tokenStorage.set(res.data);
-            setUser({ id: "", email: "", full_name: "", is_verified: true, auth_provider: "google" });
+            setUser(res.data.user);
             if (res.data.is_new_user) {
                 router.push(ROUTES.onboarding);
             } else {

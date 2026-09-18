@@ -97,7 +97,17 @@ class ChangePasswordSerializer(serializers.Serializer):
 
 def issue_tokens_for(user):
     refresh = RefreshToken.for_user(user)
-    return {"access": str(refresh.access_token), "refresh": str(refresh)}
+    return {
+        "access": str(refresh.access_token), 
+        "refresh": str(refresh),
+        "user": {
+            "id": str(user.id),
+            "email": user.email,
+            "full_name": user.full_name,
+            "is_verified": user.is_verified,
+            "auth_provider": user.auth_provider,
+        }
+    }
 
 
 class DeleteAccountSerializer(serializers.Serializer):
