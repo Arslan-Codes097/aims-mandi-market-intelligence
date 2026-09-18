@@ -14,7 +14,7 @@
 
 - **Web Application:** [https://aims-orcin.vercel.app/](https://aims-orcin.vercel.app/)
 - **Backend API Server:** [https://aims-wpuy.onrender.com/api/](https://aims-wpuy.onrender.com/api/)
-- **Demo Video:** *Placeholder for demo video (docs/assets/demo.mp4)*
+- **Demo Video:** [Click here to see the demo video](https://www.loom.com/share/67034ff494a84efdb571c5843cc8cdde)
 
 ---
 
