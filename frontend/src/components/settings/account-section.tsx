@@ -25,7 +25,7 @@ export function AccountSection() {
     const logout = useLogout();
     const deleteAccount = useDeleteAccount();
 
-    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [deleteInput, setDeleteInput] = useState("");
 
     const onSubmit = (values: FormValues) => {
@@ -41,69 +41,90 @@ export function AccountSection() {
     };
 
     return (
-        <div className="space-y-6">
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
-                <label className="text-sm font-medium">Change password</label>
-                <Input placeholder="Current password" type="password" {...register("old_password")} />
-                {errors.old_password && (
-                    <p className="text-xs text-destructive">{errors.old_password.message}</p>
-                )}
-                <Input placeholder="New password" type="password" {...register("new_password")} />
-                {errors.new_password && (
-                    <p className="text-xs text-destructive">{errors.new_password.message}</p>
-                )}
-                <Button type="submit" variant="outline" disabled={changePassword.isPending}>
-                    {changePassword.isPending ? "Updating..." : "Update password"}
-                </Button>
+        <div className="space-y-8">
+            {/* Change Password Form */}
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                <div className="space-y-1">
+                    <h3 className="text-sm font-medium">Change password</h3>
+                    <p className="text-sm text-muted-foreground">Update your password associated with your account.</p>
+                </div>
+                
+                <div className="space-y-3">
+                    <Input placeholder="Current password" type="password" {...register("old_password")} />
+                    {errors.old_password && (
+                        <p className="text-xs text-destructive">{errors.old_password.message}</p>
+                    )}
+                    <Input placeholder="New password" type="password" {...register("new_password")} />
+                    {errors.new_password && (
+                        <p className="text-xs text-destructive">{errors.new_password.message}</p>
+                    )}
+                    <Button type="submit" variant="default" disabled={changePassword.isPending}>
+                        {changePassword.isPending ? "Updating..." : "Update password"}
+                    </Button>
+                </div>
             </form>
 
-            <div className="border-t border-border pt-4 flex flex-col items-start space-y-4">
-                <Button variant="outline" onClick={() => logout.mutate()}>
-                    Log out
-                </Button>
-                
-                <div className="w-full pt-6">
-                    <h3 className="text-sm font-medium text-destructive mb-2">Danger Zone</h3>
-                    {!showDeleteConfirm ? (
-                        <Button variant="destructive" onClick={() => setShowDeleteConfirm(true)}>
-                            Delete Account
-                        </Button>
-                    ) : (
-                        <div className="space-y-3 p-4 border border-destructive/20 rounded-md bg-destructive/5">
-                            <p className="text-sm text-muted-foreground">
-                                {user?.auth_provider === "google" 
-                                    ? "This action is permanent. Please type DELETE to confirm." 
-                                    : "This action is permanent. Please enter your password to confirm."}
-                            </p>
-                            <div className="flex space-x-2">
-                                <Input 
-                                    type={user?.auth_provider === "google" ? "text" : "password"}
-                                    placeholder={user?.auth_provider === "google" ? "DELETE" : "Password"}
-                                    value={deleteInput}
-                                    onChange={(e) => setDeleteInput(e.target.value)}
-                                    className="max-w-[250px]"
-                                />
-                                <Button 
-                                    variant="destructive" 
-                                    onClick={handleDeleteAccount}
-                                    disabled={deleteAccount.isPending || !deleteInput}
-                                >
-                                    {deleteAccount.isPending ? "Deleting..." : "Confirm Delete"}
-                                </Button>
-                                <Button 
-                                    variant="ghost" 
-                                    onClick={() => {
-                                        setShowDeleteConfirm(false);
-                                        setDeleteInput("");
-                                    }}
-                                >
-                                    Cancel
-                                </Button>
-                            </div>
-                        </div>
-                    )}
+            {/* Danger Zone Actions */}
+            <div className="border-t border-border pt-6 mt-6">
+                <h3 className="text-sm font-medium text-destructive mb-4">Danger Zone</h3>
+                <div className="flex items-center justify-between bg-destructive/5 border border-destructive/20 rounded-md p-4">
+                    <Button variant="outline" onClick={() => logout.mutate()}>
+                        Log out of session
+                    </Button>
+                    <Button variant="destructive" onClick={() => setShowDeleteModal(true)}>
+                        Delete Account
+                    </Button>
                 </div>
             </div>
+
+            {/* Delete Confirmation Modal (GitHub Style) */}
+            {showDeleteModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4">
+                    <div className="bg-card border border-border shadow-2xl rounded-lg w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+                        <div className="p-6 space-y-4">
+                            <h2 className="text-xl font-bold text-destructive">Delete your account</h2>
+                            <p className="text-sm text-muted-foreground">
+                                This action is permanent and cannot be undone. All of your preferences, watchlists, and chat history will be permanently wiped.
+                            </p>
+                            
+                            <div className="space-y-2 pt-2">
+                                <label className="text-sm font-medium">
+                                    {user?.auth_provider === "google" 
+                                        ? "Please type DELETE to confirm." 
+                                        : "Please enter your password to confirm."}
+                                </label>
+                                <Input 
+                                    type={user?.auth_provider === "google" ? "text" : "password"}
+                                    placeholder={user?.auth_provider === "google" ? "DELETE" : "Your password"}
+                                    value={deleteInput}
+                                    onChange={(e) => setDeleteInput(e.target.value)}
+                                    className="w-full"
+                                    autoFocus
+                                />
+                            </div>
+                        </div>
+                        
+                        <div className="bg-muted/50 p-4 border-t border-border flex justify-end space-x-2">
+                            <Button 
+                                variant="outline" 
+                                onClick={() => {
+                                    setShowDeleteModal(false);
+                                    setDeleteInput("");
+                                }}
+                            >
+                                Cancel
+                            </Button>
+                            <Button 
+                                variant="destructive" 
+                                onClick={handleDeleteAccount}
+                                disabled={deleteAccount.isPending || !deleteInput}
+                            >
+                                {deleteAccount.isPending ? "Deleting..." : "I understand, delete my account"}
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
