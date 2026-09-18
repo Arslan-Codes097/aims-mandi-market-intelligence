@@ -14,7 +14,7 @@ const NAV_ITEMS = [
 
 export function MobileNav({ currentPath }: { currentPath: string }) {
     return (
-        <nav className="fixed inset-x-0 bottom-0 z-50 flex h-16 border-t border-border bg-card lg:hidden">
+        <nav className="fixed inset-x-0 bottom-0 z-50 flex h-[calc(4rem+env(safe-area-inset-bottom))] border-t border-border bg-card pb-[env(safe-area-inset-bottom)] lg:hidden">
             {NAV_ITEMS.map((item) => {
                 const active = item.matchPrefix ? currentPath.startsWith(item.matchPrefix) : currentPath === item.href;
                 const Icon = item.icon;

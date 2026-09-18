@@ -56,7 +56,7 @@ export default function ArbitragePage() {
     const payloadOptions = [100, 200, 300, 400, 500, 1000, 1500, 2000, 3000, 5000, 10000];
 
     return (
-        <div className="mx-auto max-w-2xl space-y-6">
+        <div className="mx-auto max-w-5xl space-y-6 pb-20 lg:pb-8">
             <div className="space-y-1">
                 <h1 className="font-display text-2xl font-semibold">Arbitrage Dashboard</h1>
                 <p className="text-sm text-muted-foreground">
