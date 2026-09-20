@@ -111,7 +111,7 @@ export function useWatchlistAlerts() {
         alerts: allAlerts,
         activeAlerts,
         unreadCount: activeAlerts.length,
-        homeCity: data?.home_city || "Lahore",
+        homeCity: data?.home_city || null,
         watchlist: data?.watchlist || [],
         isLoading,
         error,

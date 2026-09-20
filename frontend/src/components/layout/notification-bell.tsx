@@ -27,6 +27,7 @@ export function NotificationBell() {
         markAllRead,
         pushPermission,
         requestPushPermission,
+        watchlist,
     } = useWatchlistAlerts();
 
     // Close on click outside
@@ -122,12 +123,30 @@ export function NotificationBell() {
                     {/* Alerts List */}
                     <div className="max-h-80 overflow-y-auto p-2.5 space-y-2 bg-card">
                         {activeAlerts.length === 0 ? (
-                            <div className="py-8 text-center text-xs text-muted-foreground space-y-1">
+                            <div className="py-8 text-center text-xs text-muted-foreground space-y-2">
                                 <Sparkles className="h-6 w-6 mx-auto text-muted-foreground/60 mb-1" />
-                                <p className="font-semibold text-foreground">All caught up!</p>
-                                <p className="text-[11px] max-w-[220px] mx-auto text-muted-foreground">
-                                    No major price spikes (&gt;5%) detected on your watchlist commodities today.
-                                </p>
+                                {watchlist.length === 0 ? (
+                                    <>
+                                        <p className="font-semibold text-foreground">Your Watchlist is Empty</p>
+                                        <p className="text-[11px] max-w-[220px] mx-auto text-muted-foreground">
+                                            Add commodities in Settings to get real-time price spike and drop alerts.
+                                        </p>
+                                        <Link
+                                            href="/settings"
+                                            onClick={() => setIsOpen(false)}
+                                            className="inline-flex items-center gap-1 text-[11px] font-medium text-primary hover:underline mt-1"
+                                        >
+                                            Configure Watchlist &rarr;
+                                        </Link>
+                                    </>
+                                ) : (
+                                    <>
+                                        <p className="font-semibold text-foreground">All caught up!</p>
+                                        <p className="text-[11px] max-w-[220px] mx-auto text-muted-foreground">
+                                            No major price spikes detected on your watchlist commodities today.
+                                        </p>
+                                    </>
+                                )}
                             </div>
                         ) : (
                             activeAlerts.map((alert) => {

@@ -28,17 +28,27 @@ class WatchlistAlertsView(APIView):
 
     def get(self, request):
         preference, _ = UserPreference.objects.get_or_create(user=request.user)
-        watchlist = preference.watchlist or preference.preferred_commodities
-        if not watchlist:
-            watchlist = ["tomato", "potato", "onion"]
+        watchlist = preference.watchlist or preference.preferred_commodities or []
+        city = preference.home_city
 
-        city = preference.home_city or "Lahore"
+        # If user has not configured any watchlist commodities, do not emit any alerts
+        if not watchlist:
+            return Response(
+                {
+                    "alerts": [],
+                    "unread_count": 0,
+                    "watchlist": [],
+                    "home_city": city,
+                }
+            )
+
+        effective_city = city or "Lahore"
         alerts = []
 
         for item in watchlist:
             comm_name = str(item).strip().lower()
             try:
-                trend = market_data_service.get_trend(comm_name, city, days=7)
+                trend = market_data_service.get_trend(comm_name, effective_city, days=7)
                 pct_change = trend.get("pct_change", 0.0)
                 data_points = trend.get("data_points", [])
 
@@ -62,10 +72,10 @@ class WatchlistAlertsView(APIView):
                     cap_comm = comm_name.capitalize()
 
                     if direction == "spike":
-                        title = f"{cap_comm} surged {sign}{pct_change:.1f}% in {city}"
+                        title = f"{cap_comm} surged {sign}{pct_change:.1f}% in {effective_city}"
                         message = f"Current mandi rate jumped to PKR {current_price:.0f}/kg (was PKR {prev_price:.0f}/kg). Prime selling opportunity!"
                     else:
-                        title = f"{cap_comm} dropped {sign}{pct_change:.1f}% in {city}"
+                        title = f"{cap_comm} dropped {sign}{pct_change:.1f}% in {effective_city}"
                         message = f"Current mandi rate dropped to PKR {current_price:.0f}/kg (was PKR {prev_price:.0f}/kg). Consider holding or buying."
 
                     alerts.append(
@@ -73,7 +83,7 @@ class WatchlistAlertsView(APIView):
                             "id": f"alert-{comm_name}-{date_str}-{direction}",
                             "commodity": cap_comm,
                             "slug": comm_name,
-                            "city": city,
+                            "city": effective_city,
                             "change_pct": round(pct_change, 1),
                             "direction": direction,
                             "current_price": current_price,
