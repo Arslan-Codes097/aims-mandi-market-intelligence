@@ -16,7 +16,7 @@
 
 AMIS Mandi Market Intelligence turns a legacy government price database into a live, AI-powered platform. It brings together historical trend charts, logistics-aware arbitrage detection, anomaly alerts, and a bilingual natural-language agent, built for farmers, traders, and commission agents across Punjab.
 
-[**Live App**](https://aims-orcin.vercel.app/) · [**API Docs**](https://aims-wpuy.onrender.com/api/) · [**Demo Video**](https://www.loom.com/share/67034ff494a84efdb571c5843cc8cdde)
+[**Live App**](https://amis-market-intelligence.me/) · [**API Docs**](https://aims-wpuy.onrender.com/api/) · [**Demo Video**](https://www.loom.com/share/67034ff494a84efdb571c5843cc8cdde)
 
 </div>
 
@@ -55,8 +55,8 @@ AMIS is designed around three real users, not generic "market data consumers."
 
 ## 🌐 Live Environments
 
-- **Web Application:** [aims-orcin.vercel.app](https://aims-orcin.vercel.app/)
-- **Backend API:** [aims-wpuy.onrender.com/api](https://aims-wpuy.onrender.com/api/)
+- **Web Application (Custom Domain):** [amis-market-intelligence.me](https://amis-market-intelligence.me/) *(Vercel Backup: [aims-orcin.vercel.app](https://aims-orcin.vercel.app/))*
+- **Backend API Server:** [api.amis-market-intelligence.me/api](https://api.amis-market-intelligence.me/api/) *(Render Live API: [aims-wpuy.onrender.com/api](https://aims-wpuy.onrender.com/api/))*
 - **Interactive API Docs (Swagger):** available at `/api/` on the backend URL above
 - **Demo Video:** [Watch on Loom](https://www.loom.com/share/67034ff494a84efdb571c5843cc8cdde)
 
@@ -116,7 +116,7 @@ AMIS is designed around three real users, not generic "market data consumers."
 | **Scraper** | Requests, BeautifulSoup | Extracting data from the legacy ASP.NET AMIS portal |
 | **API Docs** | drf-spectacular | Auto-generated OpenAPI schema and Swagger UI |
 | **Automation** | GitHub Actions | Scheduled daily scraping workflow |
-| **Hosting** | Vercel (frontend), Render (backend), Supabase (database) | Production deployment |
+| **Hosting & Custom Domain** | Namecheap (DNS), Vercel (frontend), Render (backend), Supabase (database) | Production custom domain (`amis-market-intelligence.me`) and serverless deployment |
 
 ---
 
