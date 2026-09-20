@@ -38,7 +38,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
                         </a>
                         <span className="text-muted-foreground/40">•</span>
                         <a
-                            href="https://github.com/Arslan-Codes097"
+                            href="https://www.linkedin.com/in/arslan-babar-27516731a/"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="hover:text-primary transition-colors underline-offset-2 hover:underline"
@@ -46,14 +46,9 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
                             Arslan Babar
                         </a>
                         <span className="text-muted-foreground/40">•</span>
-                        <a
-                            href="https://github.com/s-zaid-13"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="hover:text-primary transition-colors underline-offset-2 hover:underline"
-                        >
+                        <span className="text-muted-foreground/80">
                             Samama Zaid
-                        </a>
+                        </span>
                     </div>
 
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 text-[11px] text-muted-foreground/70">

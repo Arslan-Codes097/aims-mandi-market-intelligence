@@ -74,7 +74,7 @@ export function Sidebar() {
                     <p className="text-[10px] text-muted-foreground/70 leading-tight">
                         By{" "}
                         <a
-                            href="https://github.com/Arslan-Codes097"
+                            href="https://www.linkedin.com/in/arslan-babar-27516731a/"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="font-medium text-foreground/80 hover:text-primary transition-colors underline-offset-2 hover:underline"
@@ -82,14 +82,9 @@ export function Sidebar() {
                             Arslan Babar
                         </a>{" "}
                         &amp;{" "}
-                        <a
-                            href="https://github.com/s-zaid-13"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="font-medium text-foreground/80 hover:text-primary transition-colors underline-offset-2 hover:underline"
-                        >
+                        <span className="font-medium text-foreground/75">
                             Samama Zaid
-                        </a>
+                        </span>
                     </p>
                 </div>
             </div>
