@@ -25,14 +25,22 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
     if (!isHydrated) return null;
 
+    const isChatPage = pathname?.startsWith("/chat");
+
     return (
         <div className="flex min-h-screen bg-background">
             <Sidebar />
-            <div className="flex flex-1 flex-col">
+            <div className="flex flex-1 flex-col min-w-0">
                 <DashboardHeader />
                 <MobileNav currentPath={pathname} />
-                <main className="flex-1 p-4 sm:p-6 lg:p-8">
-                    <MandiDigestBanner />
+                <main
+                    className={
+                        isChatPage
+                            ? "flex flex-1 flex-col h-[calc(100vh-3.5rem)] p-2 sm:p-3 overflow-hidden"
+                            : "flex-1 p-4 sm:p-6 lg:p-8"
+                    }
+                >
+                    {!isChatPage && <MandiDigestBanner />}
                     {children}
                 </main>
             </div>

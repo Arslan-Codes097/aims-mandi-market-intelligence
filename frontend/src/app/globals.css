@@ -27,6 +27,9 @@
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
+    --popover: 0 0% 100%;
+    --popover-foreground: 150 15% 10%;
+
     --radius: 0.85rem;
   }
 
@@ -36,6 +39,9 @@
 
     --card: 150 18% 9%;
     --card-foreground: 150 10% 95%;
+
+    --popover: 150 18% 9%;
+    --popover-foreground: 150 10% 95%;
 
     --primary: 152 55% 45%;
     --primary-foreground: 150 20% 6%;

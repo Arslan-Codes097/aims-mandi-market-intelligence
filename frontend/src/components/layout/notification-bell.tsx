@@ -74,9 +74,9 @@ export function NotificationBell() {
 
             {/* Notifications Popover Dropdown */}
             {isOpen && (
-                <div className="absolute right-0 top-11 z-50 w-80 sm:w-96 rounded-2xl border border-border bg-popover shadow-2xl backdrop-blur-md animate-in fade-in-0 zoom-in-95">
+                <div className="absolute right-0 top-12 z-50 w-80 sm:w-96 rounded-2xl border border-border bg-card text-card-foreground shadow-2xl ring-1 ring-border/80 animate-in fade-in-0 zoom-in-95 overflow-hidden">
                     {/* Header */}
-                    <div className="flex items-center justify-between border-b border-border/50 px-4 py-3 bg-muted/30">
+                    <div className="flex items-center justify-between border-b border-border px-4 py-3 bg-muted/80">
                         <div className="flex items-center gap-2">
                             <span className="font-bold text-sm text-foreground">
                                 Watchlist Price Alerts
@@ -102,7 +102,7 @@ export function NotificationBell() {
                     </div>
 
                     {/* Push Notification Banner */}
-                    <div className="flex items-center justify-between border-b border-border/40 bg-primary/5 px-4 py-2 text-xs">
+                    <div className="flex items-center justify-between border-b border-border/60 bg-muted/40 px-4 py-2 text-xs">
                         <div className="flex items-center gap-1.5 text-foreground font-medium">
                             <Radio className={cn("h-3.5 w-3.5", isPushGranted ? "text-emerald-500" : "text-amber-500")} />
                             <span>
@@ -131,7 +131,7 @@ export function NotificationBell() {
                     </div>
 
                     {/* Alerts List */}
-                    <div className="max-h-80 overflow-y-auto p-2 space-y-1.5 divide-y divide-border/20">
+                    <div className="max-h-80 overflow-y-auto p-2.5 space-y-2 bg-card">
                         {activeAlerts.length === 0 ? (
                             <div className="py-8 text-center text-xs text-muted-foreground space-y-1">
                                 <Sparkles className="h-6 w-6 mx-auto text-muted-foreground/60 mb-1" />
@@ -149,10 +149,10 @@ export function NotificationBell() {
                                     <div
                                         key={alert.id}
                                         className={cn(
-                                            "group relative flex flex-col gap-1 rounded-xl p-3 text-xs transition-colors hover:bg-muted/60",
+                                            "group relative flex flex-col gap-1.5 rounded-xl p-3 text-xs transition-colors border shadow-2xs",
                                             isSpike
-                                                ? "border-l-4 border-l-emerald-500"
-                                                : "border-l-4 border-l-rose-500"
+                                                ? "border-emerald-500/40 bg-emerald-500/5 hover:bg-emerald-500/10 text-foreground"
+                                                : "border-rose-500/40 bg-rose-500/5 hover:bg-rose-500/10 text-foreground"
                                         )}
                                     >
                                         <div className="flex items-start justify-between gap-2">

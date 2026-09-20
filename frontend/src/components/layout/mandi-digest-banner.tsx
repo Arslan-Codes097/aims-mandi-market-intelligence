@@ -18,10 +18,10 @@ export function MandiDigestBanner() {
     return (
         <div
             className={cn(
-                "mb-4 flex items-center justify-between gap-3 rounded-2xl border px-4 py-2.5 text-xs shadow-xs transition-all",
+                "mb-4 flex items-center justify-between gap-3 rounded-xl border px-4 py-2.5 text-xs shadow-xs transition-all",
                 isSpike
-                    ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-900 dark:text-emerald-200"
-                    : "border-rose-500/30 bg-rose-500/10 text-rose-900 dark:text-rose-200"
+                    ? "border-emerald-500/40 bg-emerald-500/10 text-foreground"
+                    : "border-rose-500/40 bg-rose-500/10 text-foreground"
             )}
         >
             <div className="flex flex-wrap items-center gap-2 min-w-0">
