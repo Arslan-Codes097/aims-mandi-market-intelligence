@@ -6,6 +6,8 @@
 ![Django](https://img.shields.io/badge/Django-REST_Framework-092E20?style=for-the-badge&logo=django&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Supabase-336791?style=for-the-badge&logo=postgresql&logoColor=white)
 ![Groq](https://img.shields.io/badge/AI_Agent-Groq_Llama-f55036?style=for-the-badge)
+![Gemini Vision](https://img.shields.io/badge/Vision_AI-Gemini_3.7_Flash-4285F4?style=for-the-badge&logo=google&logoColor=white)
+![PWA](https://img.shields.io/badge/PWA-Ready-purple?style=for-the-badge&logo=pwa&logoColor=white)
 ![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
 ![JWT](https://img.shields.io/badge/Auth-JWT_%2B_Google_OAuth-4285F4?style=for-the-badge&logo=jsonwebtokens&logoColor=white)
 ![License](https://img.shields.io/badge/License-Proprietary-red.svg?style=for-the-badge)
@@ -72,24 +74,28 @@ AMIS is designed around three real users, not generic "market data consumers."
 
 ## ✨ Core Features
 
-### Data & Intelligence
-- **📊 Automated Data Pipeline.** Daily scraping of AMIS mandi prices and live diesel/fuel rates via scheduled GitHub Actions, normalized into clean time-series records in PostgreSQL.
+#### Data & Intelligence
+- **📅 Automated Data Pipeline.** Daily scraping of AMIS mandi prices and live diesel/fuel rates via scheduled GitHub Actions, normalized into clean time-series records in PostgreSQL.
 - **📈 Trend & Anomaly Detection.** Rising/falling/stable direction, percentage change, and Z-score-based anomaly flagging against 30-day historical baselines.
 - **🚛 Logistics-Aware Arbitrage.** Cross-city price gap detection with true net profit, computed using real inter-city distance and live diesel prices, not just raw margin.
-- **🧭 AI Advisory Engine.** Rule-based buy/sell/hold recommendations combining trend and anomaly signals, with human-readable reasoning.
+- **🧠 AI Advisory Engine.** Rule-based buy/sell/hold recommendations combining trend and anomaly signals, with human-readable reasoning.
+- **🔔 Real-Time Watchlist Price Alerts.** Live calculation engine scanning watchlisted commodities for significant moves (≥2.5% spike/dip), surfaced through a top `MandiDigestBanner` and header notification bell.
 
-### Conversational AI
-- **🧠 Bilingual Tool-Calling Agent.** Groq-powered chat that understands English, Urdu, Roman Urdu, and Punjabi, translating natural questions (like *"pyaz ka bhao Sahiwal mein kitna hai?"*) into structured tool calls against live data.
-- **💬 Persistent Chat Sessions.** Conversations are saved per user with full history and a session sidebar, not just a stateless single-turn chatbot.
+### Conversational AI & Multimodal Vision
+- **👁️ Multimodal Crop Quality Grading (Gemini Vision).** Integrated directly into the AI Chat. Farmers can snap or upload harvest photos (e.g. tomatoes, onions) to receive instant quality grading (**Grade A, Grade B, or Grade C**), disease/defect detection (blight, rot, bruising), and contextual pricing advice powered by Google's `gemini-3.7-flash`.
+- **📸 Live Laptop Webcam & Mobile Viewfinder.** In-browser live camera capture modal (`LiveCameraModal`) with real-time video preview, shutter controls, and device gallery upload via a sleek unified `+` button.
+- **💬 Bilingual Tool-Calling Agent.** Groq-powered chat that understands English, Urdu, Roman Urdu, and Punjabi, translating natural questions (like *"pyaz ka bhao Sahiwal mein kitna hai?"*) into structured tool calls against live data.
+- **💾 Persistent Multimodal History.** Chat conversations and uploaded crop pictures are saved per user in PostgreSQL with full message history, lightbox image zoom, and glowing quality grade badges.
 
 ### Accounts & Security
-- **🔐 Full Authentication System.** Email/password registration with OTP email verification, Google OAuth sign-in, JWT access/refresh tokens with rotation and blacklisting, and forgot/reset/change-password flows.
-- **⚙️ User Preferences.** Saved home city, preferred commodities, and a watchlist, used to personalize dashboard defaults and feed real inter-city distance into arbitrage calculations.
+- **🔐 Full Authentication System.** Email/password registration with OTP email verification (via Resend HTTP API), Google OAuth sign-in, JWT access/refresh tokens with rotation and blacklisting, and forgot/reset/change-password flows.
+- **⚙️ User Preferences.** Saved home city, preferred commodities, and a watchlist, used to personalize dashboard defaults, alerts, and inter-city distances.
 
-### Interface
-- **📱 Four Purpose-Built Screens.** AI Chat, Arbitrage Dashboard, Commodity Deep-Dive (with Advisory Badge), and Settings, each mapped directly to one of the three personas above.
-- **🌗 Dark/Light Theming.** Full theme support with a custom agriculture-inspired design system (deep green and amber palette), smooth motion via Framer Motion.
-- **📄 Auto-Generated API Docs.** Every backend endpoint documented and testable via Swagger UI, generated directly from serializers.
+### Interface & PWA
+- **📱 Progressive Web App (PWA) & Web Push.** Native installability on mobile and desktop, offline manifest caching, and lock-screen Web Push notification alerts for major price moves.
+- **🛎️ Sticky Header & Notification Bell.** Real-time unread alert counter with an interactive dropdown for previewing price swings and jumping directly to live commodity charts.
+- **🎨 Dark/Light Theming.** Full theme support with a custom agriculture-inspired design system (deep green and amber palette), smooth motion via Framer Motion.
+- **📡 Auto-Generated API Docs.** Every backend endpoint documented and testable via Swagger UI, generated directly from serializers.
 
 ---
 
@@ -97,13 +103,15 @@ AMIS is designed around three real users, not generic "market data consumers."
 
 | Layer | Technology | Purpose |
 | :--- | :--- | :--- |
-| **Frontend** | Next.js 14 (App Router), TypeScript, Tailwind CSS, shadcn/ui | Interactive, themeable web dashboard |
+| **Frontend** | Next.js 14 (App Router), TypeScript, Tailwind CSS, shadcn/ui | Interactive, themeable web dashboard & PWA |
 | **Frontend State** | Zustand, TanStack Query | Auth state and server-state caching/refetching |
 | **Frontend Motion** | Framer Motion, Recharts | Animation and price trend visualization |
 | **Backend API** | Django REST Framework | Secure REST endpoints, request validation, API orchestration |
 | **Auth** | djangorestframework-simplejwt, Google Auth | JWT access/refresh tokens, Google OAuth verification |
-| **Database** | PostgreSQL (Supabase) | Time-series price storage and relational user data |
-| **AI / LLM** | Groq  | Low-latency structured tool-calling for natural language queries |
+| **Database** | PostgreSQL (Supabase) | Time-series price storage, relational user data, and multimodal chat history |
+| **Vision AI / Multimodal** | Google GenAI (`gemini-3.7-flash`, `3.6-flash`) | Automated crop quality grading, defect detection, and multimodal reasoning |
+| **Agent / NL Parsing** | Groq | Low-latency structured tool-calling for natural language market queries |
+| **Email Delivery** | django-anymail, Resend | Transactional OTP emails and account verification over HTTPS |
 | **Data Engine** | Pandas, NumPy | Trend calculation, Z-score anomaly detection, arbitrage math |
 | **Scraper** | Requests, BeautifulSoup | Extracting data from the legacy ASP.NET AMIS portal |
 | **API Docs** | drf-spectacular | Auto-generated OpenAPI schema and Swagger UI |
@@ -127,17 +135,22 @@ AMIS is designed around three real users, not generic "market data consumers."
 
 ```mermaid
 graph TD
-    A[User] -->|Register / Login| B(Next.js Frontend)
+    A[User / Farmer / Trader] -->|Web / PWA / Live Camera| B(Next.js 14 Frontend)
     B -->|JWT Bearer Token| C(Django REST API)
+    B -->|Device Camera / Live Preview| B1[LiveCameraModal & Lightbox]
+    B1 -->|Base64 Crop Image| C
+    B -->|Live Alert Polling| C1[Watchlist Alert Engine]
     C -->|Verify| D[Google OAuth]
-    C -->|OTP Email| E[Email Service]
+    C -->|OTP Verification HTTPS| E[Resend Anymail Service]
     C <-->|Natural Language Query + Tool Calling| F[Groq AI Agent]
-    C <-->|ORM: users, sessions, preferences| G[(Supabase PostgreSQL)]
-    F -->|Structured Tool Calls| H[Market Intelligence Engine]
-    H <-->|Pandas / NumPy Analysis| G
-    I[GitHub Actions] -->|Daily Scraper Workflow| G
-    I -->|Scrapes ASP.NET Form| J[Punjab AMIS Portal]
-    I -->|Scrapes Fuel Prices| K[Live Diesel Rates]
+    C <-->|Multimodal Crop Analysis| G[Google Gemini 3.7 Flash]
+    C <-->|ORM: Users, Preferences, Watchlist, Chat + Vision| H[(Supabase PostgreSQL)]
+    C1 <-->|Live Price Delta ≥2.5%| H
+    F -->|Structured Tool Calls| I[Market Intelligence Engine]
+    I <-->|Pandas / NumPy Analysis| H
+    J[GitHub Actions] -->|Daily Scraper Workflow| H
+    J -->|Scrapes ASP.NET Form| K[Punjab AMIS Portal]
+    J -->|Scrapes Fuel Prices| L[Live Diesel Rates]
 ```
 
 ---
@@ -148,18 +161,20 @@ graph TD
 mandi-edge/
 ├── backend/                    # Django REST Framework API
 │   ├── apps/
-│   │   ├── accounts/            # JWT auth, OTP, Google login, password reset
-│   │   ├── profiles/            # User preferences (home city, watchlist)
+│   │   ├── accounts/            # JWT auth, OTP verification (Resend), Google OAuth, password reset
+│   │   ├── profiles/            # User preferences & Watchlist Alerts Engine (/api/me/alerts/)
 │   │   ├── market_data/         # Trend, anomaly, arbitrage, advisory endpoints
-│   │   └── agent/                # Groq chat agent with persisted sessions
-│   ├── config/                  # Settings, URLs, WSGI/ASGI
+│   │   └── agent/                # Groq tool-calling agent + Gemini Multimodal Vision crop grader
+│   ├── config/                  # Settings, URLs, Anymail config, WSGI/ASGI
 │   └── vendor/mandiedge/        # Data intelligence engine (scraper + intelligence.py)
 │
-├── frontend/                    # Next.js dashboard
+├── frontend/                    # Next.js 14 dashboard & PWA
 │   └── src/
-│       ├── app/                  # Auth screens and 4 dashboard screens
+│       ├── app/                  # Auth screens and 4 dashboard screens (Overview, Analysis, Arbitrage, Chat)
 │       ├── components/           # Chat, arbitrage, commodity, settings UI
-│       ├── hooks/                 # TanStack Query hooks per feature
+│       │   ├── layout/           # Notification bell, MandiDigestBanner, header, sidebar
+│       │   └── vision/           # LiveCameraModal, CropGradeBadge, ImageLightbox
+│       ├── hooks/                 # TanStack Query hooks (useWatchlistAlerts, useAuth, useChat, etc.)
 │       └── lib/                   # API client, auth storage, geo utilities
 │
 ├── docs/                        # Project proposal, roadmap, schema, and agent docs
@@ -176,7 +191,9 @@ mandi-edge/
 - Python 3.11+
 - Node.js 18+
 - A Supabase project (PostgreSQL and credentials)
-- A Groq API key
+- A Groq API key (for low-latency natural language tool calling)
+- A Google Gemini API key (for crop quality grading via `gemini-3.7-flash`)
+- A Resend API key (for transactional OTP email verification via `django-anymail`)
 - A Google OAuth Client ID (for Google sign-in)
 
 ### 1. Clone the repository
@@ -222,11 +239,12 @@ Full interactive documentation is auto-generated and available at `/api/` (Swagg
 
 | Group | Base Path | Description |
 | :--- | :--- | :--- |
-| Auth | `/api/auth/` | Register, verify email, login, Google login, refresh, logout, password reset |
+| Auth | `/api/auth/` | Register, verify email OTP, login, Google login, refresh, logout, password reset |
 | Preferences | `/api/me/preferences/` | Get/update home city, commodities, watchlist |
-| Market Data | `/api/trend/`, `/api/anomaly/`, `/api/arbitrage/`, `/api/advisory/` | Core intelligence endpoints |
+| Alerts | `/api/me/alerts/` | Real-time price spike and dip alerts (≥2.5%) for watchlisted commodities in home city |
+| Market Data | `/api/trend/`, `/api/anomaly/`, `/api/arbitrage/`, `/api/advisory/` | Core intelligence endpoints (Pandas/NumPy) |
 | Reference Data | `/api/commodities/`, `/api/cities/` | Dynamic lists sourced live from the database |
-| Chat | `/api/chat/`, `/api/chat/sessions/` | AI agent messaging and session history |
+| Chat & Vision | `/api/chat/`, `/api/chat/sessions/` | AI agent messaging, persistent sessions, and multimodal crop grading (base64 image upload) |
 
 All endpoints except registration and login require an `Authorization: Bearer <access_token>` header.
 
@@ -246,14 +264,15 @@ DATABASE_URL=              # Supabase Postgres connection pooler URI
 SUPABASE_URL=               # Used by the intelligence engine
 SUPABASE_KEY=
 
-EMAIL_HOST=smtp.gmail.com
-EMAIL_PORT=587
-EMAIL_HOST_USER=your_email_host_user_here
-EMAIL_HOST_PASSWORD=your_email_host_password_here
-DEFAULT_FROM_EMAIL=your_default_from_email_here
+# Email Delivery (Resend via django-anymail over HTTPS)
+RESEND_API_KEY=
+DEFAULT_FROM_EMAIL=AMIS Market Intelligence <onboarding@resend.dev>
 
+# AI LLM & Multimodal Vision
 GROQ_API_KEY=
 GROQ_MODEL=qwen/qwen3.6-27b
+GEMINI_API_KEY=
+GEMINI_VISION_MODEL=gemini-3.7-flash
 USE_LIVE_MARKET_DATA=True
 
 GOOGLE_OAUTH_CLIENT_ID=
@@ -271,10 +290,14 @@ NEXT_PUBLIC_GOOGLE_CLIENT_ID=
 
 ## 🗺️ Roadmap
 
+- [x] Multimodal computer vision crop grading & disease detection (Google Gemini 3.7 Flash)
+- [x] In-browser live laptop webcam capture & device camera viewfinder
+- [x] Real-time Watchlist price spike/dip alerts engine (`/api/me/alerts/`)
+- [x] Interactive Notification Bell & dismissible `MandiDigestBanner`
+- [x] PWA offline caching & Web Push notification integration
 - [ ] Voice input for the AI chat (Urdu/English speech-to-text)
-- [ ] Persistent AI memory across sessions for deeper personalization
-- [ ] Push notifications for price alerts on watchlisted commodities
-- [ ] Expanded commodity and city coverage as scraper data grows
+- [ ] Persistent AI memory across sessions for personalized mandi trading journals
+- [ ] Multi-province mandi expansion (Sindh, KP, Balochistan) as scraper coverage grows
 
 ---
 
