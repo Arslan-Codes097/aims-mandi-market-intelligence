@@ -191,10 +191,15 @@ EMAIL_BACKEND = "anymail.backends.resend.EmailBackend"
 ANYMAIL = {
     "RESEND_API_KEY": env("RESEND_API_KEY", default=""),
 }
-DEFAULT_FROM_EMAIL = env(
+_raw_from_email = env(
     "DEFAULT_FROM_EMAIL",
     default="AMIS Market Intelligence <noreply@amis-market-intelligence.me>",
 )
+# If Render environment variable is still set to the old sandbox domain, force verified domain
+if not _raw_from_email or "resend.dev" in _raw_from_email:
+    DEFAULT_FROM_EMAIL = "AMIS Market Intelligence <noreply@amis-market-intelligence.me>"
+else:
+    DEFAULT_FROM_EMAIL = _raw_from_email
 
 GOOGLE_OAUTH_CLIENT_ID = env("GOOGLE_OAUTH_CLIENT_ID")
 

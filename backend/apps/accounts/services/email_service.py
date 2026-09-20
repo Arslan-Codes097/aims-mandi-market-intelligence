@@ -11,4 +11,8 @@ def send_otp_email(email, code, purpose):
         else "Reset your password"
     )
     message = f"Your verification code is {code}. It expires in {settings.OTP_EXPIRY_MINUTES} minutes."
-    send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [email])
+    from_email = getattr(settings, "DEFAULT_FROM_EMAIL", "")
+    if not from_email or "resend.dev" in from_email:
+        from_email = "AMIS Market Intelligence <noreply@amis-market-intelligence.me>"
+
+    send_mail(subject, message, from_email, [email])
