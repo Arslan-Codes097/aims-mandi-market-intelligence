@@ -25,13 +25,13 @@ export function ChatWindow({
         <div className="flex h-full flex-col">
             <div className="flex-1 overflow-y-auto scrollbar-thin p-4 space-y-3">
                 {!isLoadingHistory && messages.length === 0 && (
-                    <div className="flex h-full items-center justify-center text-center text-muted-foreground">
-                        <div className="space-y-2">
+                    <div className="flex h-full items-center justify-center text-center text-muted-foreground p-6">
+                        <div className="max-w-md space-y-2">
                             <p className="font-display text-lg font-medium text-foreground">
-                                Ask me about mandi prices
+                                Ask about mandi prices & crop quality
                             </p>
-                            <p className="text-sm">
-                                Try &quot;tomato rate in Lahore today&quot; or &quot;should I sell wheat in Multan&quot;
+                            <p className="text-sm leading-relaxed">
+                                Try &quot;tomato rate in Lahore today&quot; or click the camera/attachment button below to upload a crop photo for AI quality grading (Grade A, B, C) and disease detection.
                             </p>
                         </div>
                     </div>
@@ -47,7 +47,10 @@ export function ChatWindow({
                 <div ref={bottomRef} />
             </div>
 
-            <ChatInput onSend={(msg) => sendMessage(msg, onNewSession)} />
+            <ChatInput
+                onSend={(msg, image) => sendMessage(msg, image, onNewSession)}
+                disabled={isTyping}
+            />
         </div>
     );
 }

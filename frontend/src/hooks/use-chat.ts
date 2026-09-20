@@ -4,18 +4,22 @@ import { useState, useCallback, useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api-client";
 import type { ChatMessage, ChatMessageRecord, ChatReplyResponse } from "@/types/chat";
+import { parseCropGrading } from "@/lib/crop-grading-parser";
 
 function makeId() {
     return crypto.randomUUID();
 }
 
 function fromRecord(record: ChatMessageRecord): ChatMessage {
+    const { grading } = parseCropGrading(record.content, record.grading);
     return {
         id: record.id,
         role: record.role,
         content: record.content,
         timestamp: new Date(record.created_at).getTime(),
         status: "sent",
+        image: record.image,
+        grading: grading || undefined,
     };
 }
 
@@ -49,21 +53,46 @@ export function useChat(sessionId: string | null) {
     }, [sessionId]);
 
     const sendMessage = useCallback(
-        async (content: string, onNewSession?: (id: string) => void) => {
+        async (
+            content: string,
+            image?: string | null,
+            onNewSession?: (id: string) => void
+        ) => {
             const trimmed = content.trim();
-            if (!trimmed || trimmed.length > 1000) return;
+            if (!trimmed && !image) return;
+            if (trimmed.length > 2000) return;
 
-            setMessages((prev) => [
-                ...prev,
-                { id: makeId(), role: "user", content: trimmed, timestamp: Date.now(), status: "sent" },
-            ]);
+            const effectiveContent =
+                trimmed || "Please inspect this crop image, grade its quality, and check for any disease symptoms.";
+
+            const userMsg: ChatMessage = {
+                id: makeId(),
+                role: "user",
+                content: effectiveContent,
+                timestamp: Date.now(),
+                status: "sent",
+                image: image || undefined,
+            };
+
+            setMessages((prev) => [...prev, userMsg]);
             setIsTyping(true);
 
             try {
-                const { data } = await apiClient.post<ChatReplyResponse>("/chat/", {
-                    message: trimmed,
+                const payload: {
+                    message: string;
+                    session_id?: string;
+                    image?: string;
+                } = {
+                    message: effectiveContent,
                     session_id: sessionId ?? undefined,
-                });
+                };
+                if (image) {
+                    payload.image = image;
+                }
+
+                const { data } = await apiClient.post<ChatReplyResponse>("/chat/", payload);
+
+                const { grading } = parseCropGrading(data.reply, data.grading);
 
                 setMessages((prev) => [
                     ...prev,
@@ -73,6 +102,7 @@ export function useChat(sessionId: string | null) {
                         content: data.reply,
                         timestamp: Date.now(),
                         status: "sent",
+                        grading: grading || undefined,
                     },
                 ]);
 

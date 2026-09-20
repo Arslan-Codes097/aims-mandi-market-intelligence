@@ -11,6 +11,8 @@ drf_spectacular
 requests
 
 groq
+google-genai
+pillow
 
 pandas
 numpy

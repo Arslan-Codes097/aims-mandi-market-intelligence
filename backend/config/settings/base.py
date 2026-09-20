@@ -127,6 +127,8 @@ CSRF_TRUSTED_ORIGINS = env.list(
 
 GROQ_API_KEY = env("GROQ_API_KEY")
 GROQ_MODEL = env("GROQ_MODEL", default="qwen/qwen3.6-27b")
+GEMINI_API_KEY = env("GEMINI_API_KEY", default="")
+GEMINI_VISION_MODEL = env("GEMINI_VISION_MODEL", default="gemini-3.6-flash")
 
 USE_LIVE_MARKET_DATA = env.bool("USE_LIVE_MARKET_DATA", default=False)
 

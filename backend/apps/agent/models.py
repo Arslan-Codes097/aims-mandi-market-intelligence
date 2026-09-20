@@ -31,6 +31,8 @@ class ChatMessage(models.Model):
     )
     role = models.CharField(max_length=10, choices=Role.choices)
     content = models.TextField()
+    image = models.TextField(null=True, blank=True)
+    grading = models.JSONField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
