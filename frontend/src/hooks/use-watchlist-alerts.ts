@@ -4,28 +4,24 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api-client";
 import { useAuthStore } from "@/store/auth-store";
+import { useAlertsStore } from "@/store/alerts-store";
 import type { WatchlistAlert, WatchlistAlertsResponse } from "@/types/alerts";
-
-const STORAGE_KEY = "amis_dismissed_alert_ids";
 
 export function useWatchlistAlerts() {
     const { isAuthenticated } = useAuthStore();
-    const [dismissedIds, setDismissedIds] = useState<string[]>([]);
+    const { dismissedIds, dismissAlert, markAllRead: storeMarkAllRead, hydrate, isHydrated } = useAlertsStore();
     const [pushPermission, setPushPermission] = useState<NotificationPermission>("default");
 
-    // Load dismissed IDs and push permission state from localStorage & browser
+    // Load dismissed IDs into global store and push permission state from browser
     useEffect(() => {
-        try {
-            const raw = localStorage.getItem(STORAGE_KEY);
-            if (raw) setDismissedIds(JSON.parse(raw));
-        } catch {
-            // ignore JSON parse errors
+        if (!isHydrated) {
+            hydrate();
         }
 
         if (typeof window !== "undefined" && "Notification" in window) {
             setPushPermission(Notification.permission);
         }
-    }, []);
+    }, [isHydrated, hydrate]);
 
     const { data, isLoading, error, refetch } = useQuery<WatchlistAlertsResponse>({
         queryKey: ["watchlist-alerts"],
@@ -64,27 +60,10 @@ export function useWatchlistAlerts() {
         });
     }, [activeAlerts]);
 
-    const dismissAlert = useCallback((id: string) => {
-        setDismissedIds((prev) => {
-            const next = Array.from(new Set([...prev, id]));
-            try {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-            } catch {
-                // ignore
-            }
-            return next;
-        });
-    }, []);
-
     const markAllRead = useCallback(() => {
         const allIds = allAlerts.map((a) => a.id);
-        setDismissedIds(allIds);
-        try {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(allIds));
-        } catch {
-            // ignore
-        }
-    }, [allAlerts]);
+        storeMarkAllRead(allIds);
+    }, [allAlerts, storeMarkAllRead]);
 
     const requestPushPermission = useCallback(async () => {
         if (typeof window === "undefined" || !("Notification" in window)) {
