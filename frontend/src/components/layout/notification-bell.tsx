@@ -101,7 +101,7 @@ export function NotificationBell() {
                         )}
                     </div>
 
-                    {/* One-time Push Notification Prompt (hidden once enabled) */}
+                    {/* Device Push Notification Status / Prompt */}
                     {!isPushGranted && pushPermission !== "denied" && (
                         <div className="flex items-center justify-between border-b border-border/60 bg-muted/40 px-4 py-2 text-xs">
                             <div className="flex items-center gap-1.5 text-muted-foreground">
@@ -117,6 +117,22 @@ export function NotificationBell() {
                             >
                                 Enable
                             </Button>
+                        </div>
+                    )}
+
+                    {isPushGranted && (
+                        <div className="flex items-center justify-between border-b border-border/60 bg-emerald-500/5 px-4 py-1.5 text-[11px] text-emerald-600 dark:text-emerald-400">
+                            <div className="flex items-center gap-1.5">
+                                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+                                <span className="font-medium">Push alerts active</span>
+                            </div>
+                            <span className="text-[10px] text-muted-foreground">Device permission granted</span>
+                        </div>
+                    )}
+
+                    {pushPermission === "denied" && (
+                        <div className="flex items-center justify-between border-b border-border/60 bg-amber-500/10 px-4 py-1.5 text-[11px] text-amber-600 dark:text-amber-400">
+                            <span>Push alerts blocked in browser settings</span>
                         </div>
                     )}
 
