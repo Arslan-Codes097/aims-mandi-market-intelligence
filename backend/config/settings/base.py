@@ -191,7 +191,10 @@ EMAIL_BACKEND = "anymail.backends.resend.EmailBackend"
 ANYMAIL = {
     "RESEND_API_KEY": env("RESEND_API_KEY", default=""),
 }
-DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", default="AMIS <onboarding@resend.dev>")
+DEFAULT_FROM_EMAIL = env(
+    "DEFAULT_FROM_EMAIL",
+    default="AMIS Market Intelligence <noreply@amis-market-intelligence.me>",
+)
 
 GOOGLE_OAUTH_CLIENT_ID = env("GOOGLE_OAUTH_CLIENT_ID")
 
