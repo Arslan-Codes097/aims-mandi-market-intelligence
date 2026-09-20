@@ -30,7 +30,11 @@ export function useRegister() {
             toast.success("Check your email for the verification code.");
             router.push(`${ROUTES.verifyEmail}?email=${encodeURIComponent(variables.email)}`);
         },
-        onError: () => toast.error("Registration failed. Please check your details."),
+        onError: (err: any) => {
+            const data = err?.response?.data;
+            const message = data?.detail || data?.email?.[0] || data?.message || "Registration failed. Please check your details.";
+            toast.error(message);
+        },
     });
 }
 
@@ -46,7 +50,10 @@ export function useVerifyEmail() {
             toast.success("Email verified.");
             router.push(ROUTES.onboarding);
         },
-        onError: () => toast.error("Invalid or expired code."),
+        onError: (err: any) => {
+            const detail = err?.response?.data?.detail || "Invalid or expired code.";
+            toast.error(detail);
+        },
     });
 }
 
@@ -55,7 +62,10 @@ export function useResendOtp() {
         mutationFn: (payload: ResendOtpPayload) =>
             apiClient.post<MessageResponse>("/auth/resend-otp/", payload),
         onSuccess: () => toast.success("A new code has been sent."),
-        onError: () => toast.error("Please wait before requesting another code."),
+        onError: (err: any) => {
+            const detail = err?.response?.data?.detail || "Please wait before requesting another code.";
+            toast.error(detail);
+        },
     });
 }
 

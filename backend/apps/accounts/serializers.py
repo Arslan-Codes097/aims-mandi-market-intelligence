@@ -18,10 +18,24 @@ class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ["email", "password", "confirm_password", "full_name", "home_city", "occupation", "preferred_commodities", "watchlist"]
+        extra_kwargs = {
+            "email": {"validators": []}  # Handled custom below to allow re-registering unverified accounts
+        }
 
     def validate(self, attrs):
         if attrs.get("password") != attrs.get("confirm_password"):
             raise serializers.ValidationError({"confirm_password": "Passwords do not match."})
+
+        email = attrs.get("email")
+        if email:
+            existing = User.objects.filter(email__iexact=email).first()
+            if existing:
+                if existing.is_verified:
+                    raise serializers.ValidationError({"email": "A user with this email already exists."})
+                else:
+                    # Clean up stale unverified account from earlier failed attempt
+                    existing.delete()
+
         return attrs
 
     def create(self, validated_data):

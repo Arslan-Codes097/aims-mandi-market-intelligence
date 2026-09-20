@@ -1,3 +1,5 @@
+import logging
+from django.db import transaction
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -26,6 +28,8 @@ from .services.google_oauth_service import (
 from .services.otp_service import can_resend, generate_and_store_otp, verify_otp
 from .services.password_service import confirm_password_reset, start_password_reset
 
+logger = logging.getLogger(__name__)
+
 
 class RegisterView(APIView):
     permission_classes = [AllowAny]
@@ -33,10 +37,23 @@ class RegisterView(APIView):
     def post(self, request):
         serializer = RegisterSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = serializer.save()
 
-        otp = generate_and_store_otp(user, OTPCode.Purpose.EMAIL_VERIFICATION)
-        send_otp_email(user.email, otp.code, otp.purpose)
+        try:
+            with transaction.atomic():
+                user = serializer.save()
+                otp = generate_and_store_otp(user, OTPCode.Purpose.EMAIL_VERIFICATION)
+                send_otp_email(user.email, otp.code, otp.purpose)
+        except Exception as e:
+            logger.exception("Failed to send verification email during registration: %s", e)
+            err_str = str(e)
+            if "resend.com/domains" in err_str or "403" in err_str:
+                detail = (
+                    "Email verification service is pending domain verification in Resend. "
+                    "Please verify 'amis-market-intelligence.me' in your Resend dashboard or use Google Sign-In."
+                )
+            else:
+                detail = "Could not send verification email. Please try again shortly."
+            return Response({"detail": detail}, status=status.HTTP_502_BAD_GATEWAY)
 
         return Response(
             {"message": "Registered. Check your email for the verification code."},
@@ -80,7 +97,14 @@ class ResendOTPView(APIView):
             )
 
         otp = generate_and_store_otp(user, OTPCode.Purpose.EMAIL_VERIFICATION)
-        send_otp_email(user.email, otp.code, otp.purpose)
+        try:
+            send_otp_email(user.email, otp.code, otp.purpose)
+        except Exception as e:
+            logger.exception("Failed to send OTP email: %s", e)
+            return Response(
+                {"detail": "Unable to send verification email. Please try again or contact support."},
+                status=status.HTTP_502_BAD_GATEWAY,
+            )
         return Response({"message": "A new code has been sent."})
 
 
@@ -152,7 +176,10 @@ class ForgotPasswordView(APIView):
 
         if user:
             otp = start_password_reset(user)
-            send_otp_email(user.email, otp.code, otp.purpose)
+            try:
+                send_otp_email(user.email, otp.code, otp.purpose)
+            except Exception as e:
+                logger.exception("Failed to send password reset email: %s", e)
 
         return Response(
             {"message": "If that email exists, a reset code has been sent."}
