@@ -35,7 +35,6 @@ AMIS Mandi Market Intelligence turns a legacy government price database into a l
 - [Getting Started](#-getting-started)
 - [API Reference](#-api-reference)
 - [Environment Variables](#-environment-variables)
-- [Roadmap](#-roadmap)
 - [Credits](#-credits)
 - [License](#-license)
 
@@ -79,7 +78,8 @@ AMIS is designed around three real users, not generic "market data consumers."
 - **📈 Trend & Anomaly Detection.** Rising/falling/stable direction, percentage change, and Z-score-based anomaly flagging against 30-day historical baselines.
 - **🚛 Logistics-Aware Arbitrage.** Cross-city price gap detection with true net profit, computed using real inter-city distance and live diesel prices, not just raw margin.
 - **🧠 AI Advisory Engine.** Rule-based buy/sell/hold recommendations combining trend and anomaly signals, with human-readable reasoning.
-- **🔔 Real-Time Watchlist Price Alerts.** Live calculation engine scanning watchlisted commodities for significant moves (≥2.5% spike/dip), surfaced through a top `MandiDigestBanner` and header notification bell.
+- **🔔 Real-Time Watchlist Price Alerts & Synced Banners.** Live calculation engine scanning watchlisted commodities for significant moves (≥2.5% spike/dip), synchronized bidirectionally across `MandiDigestBanner` and the header notification bell via a unified global Zustand store.
+- **🖥️ Fixed-Height SaaS Layout & Attribution.** Screen-locked 100vh desktop sidebar with permanent navigation, quick logout, and developer profile links, alongside a complete public SaaS footer across authentication flows.
 
 ### Conversational AI & Multimodal Vision
 - **👁️ Multimodal Crop Quality Grading (Gemini Vision).** Integrated directly into the AI Chat. Farmers can snap or upload harvest photos (e.g. tomatoes, onions) to receive instant quality grading (**Grade A, Grade B, or Grade C**), disease/defect detection (blight, rot, bruising), and contextual pricing advice powered by Google's `gemini-3.7-flash`.
@@ -93,7 +93,7 @@ AMIS is designed around three real users, not generic "market data consumers."
 
 ### Interface & PWA
 - **📱 Progressive Web App (PWA) & Web Push.** Native installability on mobile and desktop, offline manifest caching, and lock-screen Web Push notification alerts for major price moves.
-- **🛎️ Sticky Header & Notification Bell.** Real-time unread alert counter with an interactive dropdown for previewing price swings and jumping directly to live commodity charts.
+- **🛎️ Sticky Header & Notification Bell.** Real-time unread alert counter with an interactive dropdown for previewing price swings, explicit device permission indicators, and quick links to live charts.
 - **🎨 Dark/Light Theming.** Full theme support with a custom agriculture-inspired design system (deep green and amber palette), smooth motion via Framer Motion.
 - **📡 Auto-Generated API Docs.** Every backend endpoint documented and testable via Swagger UI, generated directly from serializers.
 
@@ -104,7 +104,7 @@ AMIS is designed around three real users, not generic "market data consumers."
 | Layer | Technology | Purpose |
 | :--- | :--- | :--- |
 | **Frontend** | Next.js 14 (App Router), TypeScript, Tailwind CSS, shadcn/ui | Interactive, themeable web dashboard & PWA |
-| **Frontend State** | Zustand, TanStack Query | Auth state and server-state caching/refetching |
+| **Frontend State** | Zustand (Auth & Synced Alerts), TanStack Query | Global client state and server-state caching/refetching |
 | **Frontend Motion** | Framer Motion, Recharts | Animation and price trend visualization |
 | **Backend API** | Django REST Framework | Secure REST endpoints, request validation, API orchestration |
 | **Auth** | djangorestframework-simplejwt, Google Auth | JWT access/refresh tokens, Google OAuth verification |
@@ -266,7 +266,7 @@ SUPABASE_KEY=
 
 # Email Delivery (Resend via django-anymail over HTTPS)
 RESEND_API_KEY=
-DEFAULT_FROM_EMAIL=AMIS Market Intelligence <onboarding@resend.dev>
+DEFAULT_FROM_EMAIL=AMIS Market Intelligence <noreply@amis-market-intelligence.me>
 
 # AI LLM & Multimodal Vision
 GROQ_API_KEY=
@@ -288,22 +288,9 @@ NEXT_PUBLIC_GOOGLE_CLIENT_ID=
 
 ---
 
-## 🗺️ Roadmap
+## 👤 Authors & Credits
 
-- [x] Multimodal computer vision crop grading & disease detection (Google Gemini 3.7 Flash)
-- [x] In-browser live laptop webcam capture & device camera viewfinder
-- [x] Real-time Watchlist price spike/dip alerts engine (`/api/me/alerts/`)
-- [x] Interactive Notification Bell & dismissible `MandiDigestBanner`
-- [x] PWA offline caching & Web Push notification integration
-- [ ] Voice input for the AI chat (Urdu/English speech-to-text)
-- [ ] Persistent AI memory across sessions for personalized mandi trading journals
-- [ ] Multi-province mandi expansion (Sindh, KP, Balochistan) as scraper coverage grows
-
----
-
-## 👤 Credits
-
-- **Arslan Babar**, [@Arslan-Codes097](https://github.com/Arslan-Codes097)
+- **Arslan Babar**, [@Arslan-Codes097](https://github.com/Arslan-Codes097) · [LinkedIn](https://www.linkedin.com/in/arslan-babar-27516731a/)
 - **Samama Zaid**, [@s-zaid-13](https://github.com/s-zaid-13)
 
 ---
