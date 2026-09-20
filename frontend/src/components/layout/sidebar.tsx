@@ -72,8 +72,24 @@ export function Sidebar() {
                         &copy; 2026 AMIS Market Intelligence
                     </p>
                     <p className="text-[10px] text-muted-foreground/70 leading-tight">
-                        By <span className="font-medium text-foreground/75">Arslan Babar</span> &amp;{" "}
-                        <span className="font-medium text-foreground/75">Samama Zaid</span>
+                        By{" "}
+                        <a
+                            href="https://github.com/Arslan-Codes097"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="font-medium text-foreground/80 hover:text-primary transition-colors underline-offset-2 hover:underline"
+                        >
+                            Arslan Babar
+                        </a>{" "}
+                        &amp;{" "}
+                        <a
+                            href="https://github.com/s-zaid-13"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="font-medium text-foreground/80 hover:text-primary transition-colors underline-offset-2 hover:underline"
+                        >
+                            Samama Zaid
+                        </a>
                     </p>
                 </div>
             </div>
