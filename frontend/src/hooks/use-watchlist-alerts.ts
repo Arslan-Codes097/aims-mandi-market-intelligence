@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/lib/api-client";
 import { useAuthStore } from "@/store/auth-store";
@@ -40,6 +40,29 @@ export function useWatchlistAlerts() {
 
     const allAlerts = data?.alerts || [];
     const activeAlerts = allAlerts.filter((a) => !dismissedIds.includes(a.id));
+    const notifiedIdsRef = useRef<Set<string>>(new Set());
+
+    // Automatically trigger push notification on new alerts when permission is granted
+    useEffect(() => {
+        if (typeof window === "undefined" || !("Notification" in window)) return;
+        if (Notification.permission !== "granted") return;
+        if (activeAlerts.length === 0) return;
+
+        activeAlerts.forEach((alert) => {
+            if (!notifiedIdsRef.current.has(alert.id)) {
+                notifiedIdsRef.current.add(alert.id);
+                try {
+                    new Notification(`🚨 ${alert.title}`, {
+                        body: alert.message,
+                        icon: "/favicon.ico",
+                        tag: alert.id,
+                    });
+                } catch {
+                    // ignore notification dispatch errors
+                }
+            }
+        });
+    }, [activeAlerts]);
 
     const dismissAlert = useCallback((id: string) => {
         setDismissedIds((prev) => {
@@ -75,31 +98,12 @@ export function useWatchlistAlerts() {
 
             if (perm === "granted") {
                 new Notification("🔔 AMIS Watchlist Alerts Active", {
-                    body: "You will now receive instant desktop & mobile alerts whenever your watched mandi items experience price spikes!",
+                    body: "You will now receive instant alerts whenever your watched mandi items experience price spikes!",
                     icon: "/favicon.ico",
                 });
             }
         } catch (err) {
             console.error("Failed to request notification permission:", err);
-        }
-    }, []);
-
-    const sendTestPush = useCallback((sampleAlert?: WatchlistAlert) => {
-        if (typeof window === "undefined" || !("Notification" in window)) return;
-
-        if (Notification.permission === "granted") {
-            const title = sampleAlert
-                ? `🚨 ${sampleAlert.title}`
-                : "🚨 Tomato surged +13.3% in Lahore!";
-            const body = sampleAlert
-                ? sampleAlert.message
-                : "Current mandi rate jumped to PKR 170/kg. Prime selling opportunity!";
-
-            new Notification(title, {
-                body,
-                icon: "/favicon.ico",
-                tag: "amis-mandi-alert",
-            });
         }
     }, []);
 
@@ -115,7 +119,6 @@ export function useWatchlistAlerts() {
         markAllRead,
         pushPermission,
         requestPushPermission,
-        sendTestPush,
         refetch,
     };
 }

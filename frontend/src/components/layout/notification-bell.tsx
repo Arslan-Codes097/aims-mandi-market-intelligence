@@ -27,7 +27,6 @@ export function NotificationBell() {
         markAllRead,
         pushPermission,
         requestPushPermission,
-        sendTestPush,
     } = useWatchlistAlerts();
 
     // Close on click outside
@@ -101,34 +100,24 @@ export function NotificationBell() {
                         )}
                     </div>
 
-                    {/* Push Notification Banner */}
-                    <div className="flex items-center justify-between border-b border-border/60 bg-muted/40 px-4 py-2 text-xs">
-                        <div className="flex items-center gap-1.5 text-foreground font-medium">
-                            <Radio className={cn("h-3.5 w-3.5", isPushGranted ? "text-emerald-500" : "text-amber-500")} />
-                            <span>
-                                {isPushGranted ? "Web Push Active" : "Web Push Inactive"}
-                            </span>
-                        </div>
+                    {/* One-time Push Notification Prompt (hidden once enabled) */}
+                    {!isPushGranted && pushPermission !== "denied" && (
+                        <div className="flex items-center justify-between border-b border-border/60 bg-muted/40 px-4 py-2 text-xs">
+                            <div className="flex items-center gap-1.5 text-muted-foreground">
+                                <Radio className="h-3.5 w-3.5 text-amber-500 shrink-0" />
+                                <span className="text-[11px]">Enable price alerts on your device</span>
+                            </div>
 
-                        {!isPushGranted ? (
                             <Button
                                 size="sm"
                                 variant="outline"
                                 onClick={requestPushPermission}
                                 className="h-6 px-2 text-[10px] rounded-md border-primary/40 text-primary hover:bg-primary hover:text-white"
                             >
-                                Enable Push
+                                Enable
                             </Button>
-                        ) : (
-                            <button
-                                type="button"
-                                onClick={() => sendTestPush(activeAlerts[0])}
-                                className="text-[10px] text-muted-foreground hover:text-primary transition-colors cursor-pointer underline"
-                            >
-                                Test Push
-                            </button>
-                        )}
-                    </div>
+                        </div>
+                    )}
 
                     {/* Alerts List */}
                     <div className="max-h-80 overflow-y-auto p-2.5 space-y-2 bg-card">
