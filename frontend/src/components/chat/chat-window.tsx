@@ -22,15 +22,15 @@ export function ChatWindow({
     }, [messages, isTyping]);
 
     return (
-        <div className="flex h-full flex-col">
-            <div className="flex-1 overflow-y-auto scrollbar-thin p-4 space-y-3">
+        <div className="flex flex-1 min-h-0 flex-col overflow-hidden">
+            <div className="flex-1 min-h-0 overflow-y-auto scrollbar-thin p-3 sm:p-4 space-y-3">
                 {!isLoadingHistory && messages.length === 0 && (
-                    <div className="flex h-full items-center justify-center text-center text-muted-foreground p-6">
+                    <div className="flex min-h-full items-center justify-center text-center text-muted-foreground p-4">
                         <div className="max-w-md space-y-2">
-                            <p className="font-display text-lg font-medium text-foreground">
+                            <p className="font-display text-base sm:text-lg font-medium text-foreground">
                                 Ask about mandi prices & crop quality
                             </p>
-                            <p className="text-sm leading-relaxed">
+                            <p className="text-xs sm:text-sm leading-relaxed">
                                 Try &quot;tomato rate in Lahore today&quot; or click the camera/attachment button below to upload a crop photo for AI quality grading (Grade A, B, C) and disease detection.
                             </p>
                         </div>

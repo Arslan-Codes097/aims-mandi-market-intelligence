@@ -173,7 +173,7 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
     const canSend = Boolean(value.trim() || selectedImage) && !disabled && !isProcessingImage;
 
     return (
-        <div className="flex flex-col border-t border-border bg-card p-3">
+        <div className="flex flex-col border-t border-border bg-card p-2.5 sm:p-3 shrink-0">
             {/* Hidden native file inputs */}
             {/* Standard file picker */}
             <input

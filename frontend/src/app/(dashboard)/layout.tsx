@@ -36,7 +36,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <main
                     className={
                         isChatPage
-                            ? "flex flex-1 flex-col h-[calc(100dvh-7.5rem)] lg:h-[calc(100vh-3.5rem)] p-2 sm:p-3 overflow-hidden"
+                            ? "fixed inset-x-0 top-14 bottom-[calc(4rem+env(safe-area-inset-bottom))] lg:static lg:inset-auto lg:h-[calc(100vh-3.5rem)] flex flex-1 flex-col p-2 sm:p-3 overflow-hidden"
                             : "flex-1 p-4 sm:p-6 lg:p-8 pb-28 lg:pb-8"
                     }
                 >
