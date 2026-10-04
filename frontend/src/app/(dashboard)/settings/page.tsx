@@ -18,6 +18,33 @@ export default function SettingsPage() {
             <div className="rounded-2xl border border-border bg-card p-6">
                 <AccountSection />
             </div>
+
+            {/* Mobile developer attribution */}
+            <div className="block lg:hidden text-center space-y-1 text-muted-foreground/80 py-4">
+                <div className="flex items-center justify-center gap-1.5 text-xs font-medium text-foreground/80">
+                    <span>Crafted with</span>
+                    <span className="text-rose-500 animate-pulse text-xs">❤️</span>
+                    <span>in Punjab</span>
+                </div>
+                <p className="text-[10px] text-muted-foreground leading-tight">
+                    &copy; 2026 AMIS Market Intelligence
+                </p>
+                <p className="text-[10px] text-muted-foreground/70 leading-tight">
+                    By{" "}
+                    <a
+                        href="https://www.linkedin.com/in/arslan-babar-27516731a/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-medium text-foreground/80 hover:text-primary transition-colors underline-offset-2 hover:underline"
+                    >
+                        Arslan Babar
+                    </a>{" "}
+                    &amp;{" "}
+                    <span className="font-medium text-foreground/75">
+                        Samama Zaid
+                    </span>
+                </p>
+            </div>
         </div>
     );
 }

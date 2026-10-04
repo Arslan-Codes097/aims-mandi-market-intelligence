@@ -1,9 +1,10 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { MapPin, Activity } from "lucide-react";
+import { MapPin, Activity, LogOut } from "lucide-react";
 import { NotificationBell } from "./notification-bell";
 import { useWatchlistAlerts } from "@/hooks/use-watchlist-alerts";
+import { useLogout } from "@/hooks/use-auth";
 
 function getPageTitle(pathname: string): string {
     if (pathname.startsWith("/chat")) return "AMIS AI Agent";
@@ -17,6 +18,7 @@ export function DashboardHeader() {
     const pathname = usePathname();
     const title = getPageTitle(pathname);
     const { homeCity } = useWatchlistAlerts();
+    const logout = useLogout();
 
     return (
         <header className="sticky top-0 z-30 flex h-14 w-full items-center justify-between border-b border-border bg-background/80 px-4 sm:px-6 lg:px-8 backdrop-blur-md">
@@ -31,10 +33,10 @@ export function DashboardHeader() {
                 </span>
             </div>
 
-            {/* Right: Home City Badge & Notification Bell */}
-            <div className="flex items-center gap-2.5 sm:gap-3">
+            {/* Right: Home City Badge, Notification Bell & Mobile Logout */}
+            <div className="flex items-center gap-2 sm:gap-3">
                 {homeCity && (
-                    <div className="inline-flex items-center gap-1 rounded-lg border border-border/60 bg-muted/50 px-2.5 py-1 text-xs text-muted-foreground font-medium">
+                    <div className="inline-flex items-center gap-1 rounded-lg border border-border/60 bg-muted/50 px-2 sm:px-2.5 py-1 text-xs text-muted-foreground font-medium">
                         <MapPin className="h-3.5 w-3.5 text-primary" />
                         <span>{homeCity}</span>
                     </div>
@@ -42,6 +44,16 @@ export function DashboardHeader() {
 
                 {/* Watchlist Notification Bell */}
                 <NotificationBell />
+
+                {/* Mobile Quick Logout */}
+                <button
+                    onClick={() => logout.mutate()}
+                    className="flex lg:hidden h-8 w-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors cursor-pointer"
+                    title="Log out"
+                    aria-label="Log out"
+                >
+                    <LogOut className="h-4 w-4" />
+                </button>
             </div>
         </header>
     );

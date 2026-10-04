@@ -67,11 +67,11 @@ export function AccountSection() {
             {/* Danger Zone Actions */}
             <div className="border-t border-border pt-6 mt-6">
                 <h3 className="text-sm font-medium text-destructive mb-4">Danger Zone</h3>
-                <div className="flex items-center justify-between bg-destructive/5 border border-destructive/20 rounded-md p-4">
-                    <Button variant="outline" onClick={() => logout.mutate()}>
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-destructive/5 border border-destructive/20 rounded-xl p-4">
+                    <Button variant="outline" className="w-full sm:w-auto" onClick={() => logout.mutate()}>
                         Log out of session
                     </Button>
-                    <Button variant="destructive" onClick={() => setShowDeleteModal(true)}>
+                    <Button variant="destructive" className="w-full sm:w-auto" onClick={() => setShowDeleteModal(true)}>
                         Delete Account
                     </Button>
                 </div>
